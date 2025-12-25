@@ -18,6 +18,12 @@ export const authApi = baseApi.injectEndpoints({
         data: loginfo,
       }),
     }),
+    me: builder.query({
+      query: () => ({
+        url: "/auth/me",
+        method: "GET",
+      }),
+    }),
   }),
 });
-export const { useLogInMutation } = authApi;
+export const { useLogInMutation, useMeQuery } = authApi;
