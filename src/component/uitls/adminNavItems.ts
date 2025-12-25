@@ -1,5 +1,9 @@
 export const adminNavItems = [
   {
+    label: "Home",
+    path: "/",
+  },
+  {
     label: "Admin Dashboard",
     path: "/admin/dashboard",
   },
@@ -10,9 +14,5 @@ export const adminNavItems = [
   {
     label: "Manage Listings",
     path: "/admin/listings",
-  },
-  {
-    label: "Profile",
-    path: "/profile",
   },
 ];

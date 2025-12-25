@@ -7,10 +7,7 @@ export const loggedOutNavItems = [
     label: "Become a Guide",
     path: "/become-guide",
   },
-  {
-    label: "Login",
-    path: "/login",
-  },
+
   {
     label: "Register",
     path: "/register",
