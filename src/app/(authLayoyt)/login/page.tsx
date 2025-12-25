@@ -6,8 +6,11 @@ import Image from "next/image";
 import photo from "../../../../public/proflio.png";
 import { useLogInMutation } from "@/redux/feature/auth/auth.api";
 import Password from "@/component/login/password";
+import { useRouter } from "next/navigation";
+
 export default function Page() {
   const [login] = useLogInMutation();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -17,6 +20,7 @@ export default function Page() {
     console.log(data);
     const result = await login(data).unwrap();
     console.log(result);
+    router.push("/");
   };
 
   return (

@@ -5,7 +5,7 @@ import { touristNavItems } from "./touristNavItems";
 
 export const role = {
   admin: "ADMIN",
-  superAdmin: "SUPER_ADMIN",
+  superAdmin: "TOURIST",
   user: "USER",
 };
 

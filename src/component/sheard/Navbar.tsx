@@ -4,15 +4,24 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getSidebarItems } from "../uitls/getNavItem";
+import { useMeQuery } from "@/redux/feature/auth/auth.api";
+import { loggedOutNavItems } from "../uitls/loggedOutNavItems";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolly, setScrolly] = useState(0);
   const [visible, setVisible] = useState(false);
 
+  const { data: userData } = useMeQuery(undefined);
+
+  const navItems = userData?.data?.role
+    ? getSidebarItems(userData.data.role.toUpperCase())
+    : loggedOutNavItems;
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.scrollY || 0;
+
       setScrolly(currentScroll);
 
       setVisible(currentScroll > 5);
@@ -25,8 +34,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navitem = getSidebarItems("ADMIN");
-
   return (
     <div
       className={`fixed  w-full  left-0 top-0 z-50 transition-all duration-500 ease-in-out  ${
@@ -35,20 +42,20 @@ export default function Navbar() {
     >
       <div className=" md:max-w-6xl mx-auto w-full overflow-hidden">
         <div className="flex items-center justify-between  relative inset-x-0  ">
-          <div className="w-[90px] rounded-full">
+          <div className="">
             <h2>hello</h2>
           </div>
 
           <div className="hidden md:block">
             <ul className="flex gap-4 overflow-hidden py-2 md:p-2 text-[15px] text-gray-700  font-medium">
-              {navitem.map((item, index) => (
+              {navItems.map((item, index) => (
                 <Link href={item.path} key={index}>
                   {item.label}
                 </Link>
               ))}
             </ul>
           </div>
-          <div>
+          <div className="hidden md:block">
             <h2>hello</h2>
           </div>
 
@@ -67,7 +74,7 @@ export default function Navbar() {
           >
             <div className="block md:hidden  h-screen bg-[#111111]/20">
               <ul className="flex flex-col gap-4 text-sm font-medium font-mono items-center pt-10">
-                {navitem.map((item, index) => (
+                {navItems.map((item, index) => (
                   <Link
                     onClick={() => setOpen(!open)}
                     className=""
