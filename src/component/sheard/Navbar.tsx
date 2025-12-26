@@ -73,18 +73,18 @@ export default function Navbar() {
                 {userData ? (
                   <Link href="/login">
                     <span className="text-gray-700 font-medium py-2 text-[15px] md:p-2 capitalize">
-                      log in
+                      log Out
                     </span>
                   </Link>
                 ) : (
                   <h2 className="text-gray-700 font-medium py-2 text-[15px] md:p-2 capitalize">
-                    log Out
+                    log in
                   </h2>
                 )}
               </div>
               {userData && (
                 <div>
-                  <Avatar className="w-12 h-12">
+                  <Avatar className="w-10 h-10">
                     <AvatarImage
                       className="object-cover"
                       src={userData?.data?.profilePhoto}

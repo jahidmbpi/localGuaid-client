@@ -13,7 +13,7 @@ export default function Popular() {
   return (
     <div className="max-w-6xl mx-auto px-2">
       {/* Heading */}
-      <div className="flex flex-col items-center justify-center mt-16">
+      <div className="flex flex-col items-center justify-center mt-16 ">
         <h2 className="text-3xl font-bold capitalize tracking-tight">
           Popular Destinations
         </h2>
