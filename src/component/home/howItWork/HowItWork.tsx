@@ -1,14 +1,16 @@
-import { howItWorksData } from "../uitls/cardItem";
+"use client";
+
+import { howItWorksData } from "../../uitls/cardItem";
 
 export default function HowItWork() {
   return (
     <div className="max-w-6xl m-auto">
-      <div className=" items-center mx-auto text-center mt-15">
+      <div className="items-center mx-auto text-center mt-15">
         <h2 className="text-2xl font-sans font-bold capitalize tracking-tighter">
           How It Works
         </h2>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-13 mt-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-13 mt-5 md:mt-10 p-2">
         {howItWorksData.map((item, index) => (
           <div
             key={index}

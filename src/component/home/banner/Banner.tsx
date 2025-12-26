@@ -13,8 +13,8 @@ export default function Banner() {
       />
       <div className="absolute inset-0 bg-black/40" />
       <div className=" relative z-10 flex h-full items-center justify-center text-white text-center">
-        <div className="max-w-4xl space-y-4">
-          <h2 className="text-2xl bg-[#2f4551] py-1 rounded-full inline-block px-4">
+        <div className="max-w-4xl space-y-2 md:space-y-4  px-2">
+          <h2 className="text-[18px] md:text-2xl bg-[#2f4551] py-1 rounded-full inline-block px-4">
             Adventure Awaits
           </h2>
           <h1 className="text-5xl font-bold">EXPLORE THE WORLD</h1>
@@ -28,9 +28,9 @@ export default function Banner() {
             Welcome to LocalGuaid! Explore top attractions, savor local flavors,
             and experience true local culture. Your real adventure starts here!
           </p>
-          <div className="relative flex w-[50%] items-center justify-center mx-auto mt-8">
+          <div className="relative flex w-[70%] md:w-[50%] items-center justify-center mx-auto mt-5 md:mt-8">
             <input
-              className=" border border-gray-300 p-3 rounded-md w-full "
+              className=" border border-gray-300 p-2 md:p-3 rounded-md w-full "
               type="text"
               placeholder="Where are you go ?"
             />
