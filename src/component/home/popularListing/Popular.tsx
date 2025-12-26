@@ -45,6 +45,7 @@ export default function Popular() {
               <p className="text-sm text-gray-600 line-clamp-3">
                 {listing.description}
               </p>
+              <p className="text-end text-sm text-blue-600">see more..</p>
             </div>
           </div>
         ))}
