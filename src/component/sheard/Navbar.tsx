@@ -103,14 +103,14 @@ export default function Navbar() {
             {open ? <X size={32} /> : <Menu size={32} />}
           </div>
         </div>
-        <div className="absolute top-0 left-0 w-[70%] overflow-hidden">
+        <div className="absolute top-0 left-0 w-[80%] overflow-hidden z-10">
           <div
             className={`${
               open ? "translate-x-0 " : "-translate-x-full"
             } transition-transform duration-700 ease-in-out w-full `}
           >
-            <div className="block md:hidden  h-screen bg-[#111111]/20">
-              <ul className="flex flex-col gap-4 text-sm font-medium font-mono items-center pt-10">
+            <div className="block md:hidden  h-screen bg-[#111111]/80">
+              <ul className="flex flex-col gap-4 text-sm font-medium font-mono items-start pt-25 text-[#f3f4f6] pl-4">
                 {navItems.map((item, index) => (
                   <Link
                     onClick={() => setOpen(!open)}
@@ -123,7 +123,7 @@ export default function Navbar() {
                 ))}
                 {userData ? (
                   <Link href="/login">
-                    <span className="text-gray-700 font-medium py-2 text-[15px] md:p-2">
+                    <span className="text-[#f3f4f6] font-medium py-2 text-[15px] md:p-2">
                       log in
                     </span>
                   </Link>

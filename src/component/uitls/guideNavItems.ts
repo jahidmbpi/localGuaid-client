@@ -5,7 +5,7 @@ export const guideNavItems = [
   },
   {
     label: "Explore Tours",
-    path: "/tours",
+    path: "/exploreTour",
   },
   {
     label: "Dashboard",
