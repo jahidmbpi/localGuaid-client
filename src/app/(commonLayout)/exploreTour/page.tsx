@@ -2,6 +2,7 @@
 "use client";
 import { useGetALlListingQuery } from "@/redux/feature/listing/listing.api";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function ExploreTour() {
   const {
@@ -9,6 +10,18 @@ export default function ExploreTour() {
     isLoading,
     error,
   } = useGetALlListingQuery(undefined);
+  const currentP = listingData?.data?.meta?.page;
+  const [currentPage, setCurrentPage] = useState(currentP);
+
+  const pageArray = [];
+  if (currentP) {
+    for (let i = 1; i <= currentP; i++) {
+      pageArray.push(i);
+    }
+  }
+  console.log("this is page", pageArray);
+  console.log("state", currentPage);
+
   console.log(listingData);
   return (
     <div className="max-w-6xl mx-auto min-h-screen">
@@ -48,6 +61,32 @@ export default function ExploreTour() {
               </div>
             ))}
           </div>
+          {/* this is paginton */}
+          {listingData && (
+            <div className="flex gap-2 items-center justify-center">
+              <button
+                className="bg-blue-600 px-3 rounded-sm"
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                prev
+              </button>
+              {pageArray.map((item) => (
+                <button
+                  className="bg-blue-600 px-3 rounded-sm"
+                  key={item}
+                  onClick={() => setCurrentPage(item)}
+                >
+                  {item}
+                </button>
+              ))}
+              <button
+                className="bg-blue-600 px-3 rounded-sm"
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                next
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

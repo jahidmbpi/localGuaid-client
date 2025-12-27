@@ -1,7 +1,11 @@
 export const loggedOutNavItems = [
   {
+    label: "Home",
+    path: "/",
+  },
+  {
     label: "Explore Tours",
-    path: "/tours",
+    path: "/exploreTour",
   },
   {
     label: "Become a Guide",
