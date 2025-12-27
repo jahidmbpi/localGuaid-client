@@ -6,10 +6,11 @@ import { touristNavItems } from "./touristNavItems";
 export const role = {
   admin: "ADMIN",
   superAdmin: "TOURIST",
-  user: "USER",
+  user: "GUIDE",
 };
 
 export const getSidebarItems = (userRole: TRole) => {
+  console.log(userRole);
   switch (userRole) {
     case role.admin:
       return [...adminNavItems];

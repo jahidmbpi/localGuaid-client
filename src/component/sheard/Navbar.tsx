@@ -77,9 +77,12 @@ export default function Navbar() {
                     </span>
                   </Link>
                 ) : (
-                  <h2 className="text-gray-700 font-medium py-2 text-[15px] md:p-2 capitalize">
+                  <Link
+                    href="/login"
+                    className="text-gray-700 font-medium py-2 text-[15px] md:p-2 capitalize"
+                  >
                     log in
-                  </h2>
+                  </Link>
                 )}
               </div>
               {userData && (
