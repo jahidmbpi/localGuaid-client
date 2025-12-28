@@ -5,28 +5,80 @@ import Image from "next/image";
 import { useState } from "react";
 
 export default function ExploreTour() {
+  const [page, setCurrentPage] = useState(0);
+  const [limit, setLimit] = useState(2);
+  console.log(limit);
+  console.log(page);
   const {
     data: listingData,
     isLoading,
     error,
-  } = useGetALlListingQuery(undefined);
-  const currentP = listingData?.data?.meta?.page;
-  const [currentPage, setCurrentPage] = useState(currentP);
+  } = useGetALlListingQuery({ page, limit });
+  const totalData = listingData?.data?.meta?.total || 0;
+  const totalPages = Math.ceil(totalData / limit);
 
-  const pageArray = [];
-  if (currentP) {
-    for (let i = 1; i <= currentP; i++) {
-      pageArray.push(i);
-    }
+  const pageArray = Array.from({ length: totalPages }, (_, i) => i + 1);
+  if (isLoading) {
+    return <div className="text-center mt-20">লোড হচ্ছে...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center mt-20 text-red-500">
+        ডাটা লোড করতে সমস্যা হয়েছে
+      </div>
+    );
   }
   console.log("this is page", pageArray);
-  console.log("state", currentPage);
 
-  console.log(listingData);
+  console.log(listingData.data.meta);
   return (
     <div className="max-w-6xl mx-auto min-h-screen">
       <div className="flex mt-20 flex-row">
-        <div className="w-50 bg-red-500 border border-r-2 h-screen "></div>
+        <div className="w-50 mt-17 border border-r-2 h-screen rounded-sm px-2 ">
+          <div>
+            <h2 className="text-[18px] font-sans font-medium mt-2">
+              filter listing
+            </h2>
+
+            <div className="space-y-2">
+              <div className="flex flex-col gap-2 ">
+                <label className="text-sm">show per page</label>
+                <select
+                  value={limit}
+                  onChange={(e) => {
+                    setLimit(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  className=" border p-1 rounded-sm px-1 w-full"
+                >
+                  <option value="1">1</option>
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="15">15</option>
+                </select>
+              </div>
+              <div className="flex flex-col gap2">
+                <label className="text-sm font-sans">sort</label>
+                <select defaultValue="" className="border p-1 rounded-sm">
+                  <option className="text-sm font-sans" value="asec">
+                    asec
+                  </option>
+                  <option className="text-sm font-sans" value="desc">
+                    desc
+                  </option>
+                </select>
+              </div>
+              <div>
+                <label className="text-sm font-sans font-medium">search</label>
+                <input
+                  className="w-full border rounded-sm py-1 px-2 text-sm"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
         <div className=" w-full">
           <div className="text-center items-center justify-center mt-15">
             <h2 className="text-2xl font-sans font-bold tracking-tight">
@@ -63,16 +115,23 @@ export default function ExploreTour() {
           </div>
           {/* this is paginton */}
           {listingData && (
-            <div className="flex gap-2 items-center justify-center">
+            <div className="flex gap-2 items-center justify-center mb-10">
               <button
-                className="bg-blue-600 px-3 rounded-sm"
-                onClick={() => setCurrentPage(currentPage - 1)}
+                className={` ${
+                  page === totalPages
+                    ? "bg-gray-300 px-3 rounded-sm "
+                    : "bg-blue-300 px-3 rounded-sm "
+                }`}
+                onClick={() => setCurrentPage(page - 1)}
+                disabled={page === 1}
               >
                 prev
               </button>
-              {pageArray.map((item) => (
+              {pageArray.map((item, index) => (
                 <button
-                  className="bg-blue-600 px-3 rounded-sm"
+                  className={`bg-blue-300 px-3 rounded-sm ${
+                    page === index + 1 && "bg-green-500"
+                  }`}
                   key={item}
                   onClick={() => setCurrentPage(item)}
                 >
@@ -80,8 +139,13 @@ export default function ExploreTour() {
                 </button>
               ))}
               <button
-                className="bg-blue-600 px-3 rounded-sm"
-                onClick={() => setCurrentPage(currentPage + 1)}
+                onClick={() => setCurrentPage(page + 1)}
+                disabled={page === totalPages}
+                className={` ${
+                  page === totalPages
+                    ? "bg-gray-300 px-3 rounded-sm "
+                    : "bg-blue-300 px-3 rounded-sm "
+                }`}
               >
                 next
               </button>
