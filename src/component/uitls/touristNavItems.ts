@@ -9,6 +9,6 @@ export const touristNavItems = [
   },
   {
     label: "My Bookings",
-    path: "/my-bookings",
+    path: "/myBooking",
   },
 ];

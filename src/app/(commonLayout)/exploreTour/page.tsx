@@ -6,7 +6,7 @@ import { useState } from "react";
 
 export default function ExploreTour() {
   const [page, setCurrentPage] = useState(0);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   console.log(limit);
   console.log(page);
   const {
