@@ -6,7 +6,7 @@ import { useState } from "react";
 
 export default function ExploreTour() {
   const [page, setCurrentPage] = useState(0);
-  const [limit, setLimit] = useState(2);
+  const [limit, setLimit] = useState(5);
   console.log(limit);
   console.log(page);
   const {
@@ -115,7 +115,7 @@ export default function ExploreTour() {
           </div>
           {/* this is paginton */}
           {listingData && (
-            <div className="flex gap-2 items-center justify-center mb-10">
+            <div className="flex gap-2 items-center justify-center my-10">
               <button
                 className={` ${
                   page === totalPages
