@@ -5,14 +5,14 @@ export const adminNavItems = [
   },
   {
     label: "Admin Dashboard",
-    path: "/admin/dashboard",
+    path: "/deshbord",
   },
   {
     label: "Manage Users",
-    path: "/admin/users",
+    path: "/deshbord/manageUser",
   },
   {
     label: "Manage Listings",
-    path: "/admin/listings",
+    path: "/deshbord/managelisting",
   },
 ];

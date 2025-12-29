@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import Loader from "@/helper/loader";
 import { useTuristBookingQuery } from "@/redux/feature/booking/booking.api";
 import {
   View,
@@ -33,14 +34,7 @@ export default function Booking() {
   const pageArray = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">লোড হচ্ছে...</p>
-        </div>
-      </div>
-    );
+    return <Loader />;
   }
 
   if (error) {
@@ -48,7 +42,7 @@ export default function Booking() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center bg-red-50 p-6 rounded-lg">
           <XCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
-          <p className="text-red-600 font-medium">কিছু একটা সমস্যা হয়েছে</p>
+          <p className="text-red-600 font-medium">Something went Wrong</p>
         </div>
       </div>
     );

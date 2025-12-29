@@ -9,13 +9,7 @@ export const bookingApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
-    getALlListing: builder.query({
-      query: (params) => ({
-        url: "/listing/getALlListing",
-        method: "GET",
-        params,
-      }),
-    }),
+
     turistBooking: builder.query({
       query: (params) => ({
         url: "/booking/turistBooking",
@@ -26,8 +20,4 @@ export const bookingApi = baseApi.injectEndpoints({
   }),
 });
 
-export const {
-  useMyBookingQuery,
-  useTuristBookingQuery,
-  useGetALlListingQuery,
-} = bookingApi;
+export const { useMyBookingQuery, useTuristBookingQuery } = bookingApi;
