@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+import Loader from "@/helper/loader";
+import PaginationC from "@/helper/pagination";
 import { useGetALlListingQuery } from "@/redux/feature/listing/listing.api";
 import Image from "next/image";
 import { useState } from "react";
@@ -19,16 +21,15 @@ export default function ExploreTour() {
 
   const pageArray = Array.from({ length: totalPages }, (_, i) => i + 1);
   if (isLoading) {
-    return <div className="text-center mt-20">লোড হচ্ছে...</div>;
+    return <Loader></Loader>;
   }
 
   if (error) {
     return (
-      <div className="text-center mt-20 text-red-500">
-        ডাটা লোড করতে সমস্যা হয়েছে
-      </div>
+      <div className="text-center mt-20 text-red-500">Something went wrong</div>
     );
   }
+  console.log(error);
   console.log("this is page", pageArray);
 
   console.log(listingData.data.meta);
@@ -114,45 +115,13 @@ export default function ExploreTour() {
             ))}
           </div>
           {/* this is paginton */}
-          {listingData && (
-            <div className="flex gap-2 items-center justify-center my-10">
-              <button
-                className={` ${
-                  page === totalPages
-                    ? "bg-gray-300 px-3 rounded-sm "
-                    : "bg-blue-300 px-3 rounded-sm "
-                }`}
-                onClick={() => setCurrentPage(page - 1)}
-                disabled={page === 1}
-              >
-                prev
-              </button>
-              {pageArray.map((item, index) => (
-                <button
-                  className={`bg-blue-300 px-3 rounded-sm ${
-                    page === index + 1 && "bg-green-500"
-                  }`}
-                  key={item}
-                  onClick={() => setCurrentPage(item)}
-                >
-                  {item}
-                </button>
-              ))}
-              <button
-                onClick={() => setCurrentPage(page + 1)}
-                disabled={page === totalPages}
-                className={` ${
-                  page === totalPages
-                    ? "bg-gray-300 px-3 rounded-sm "
-                    : "bg-blue-300 px-3 rounded-sm "
-                }`}
-              >
-                next
-              </button>
-            </div>
-          )}
         </div>
       </div>
+      <PaginationC
+        pageArray={pageArray}
+        setCurrentPage={setCurrentPage}
+        page={page}
+      ></PaginationC>
     </div>
   );
 }
