@@ -7,6 +7,7 @@ import photo from "../../../../public/proflio.png";
 import { useLogInMutation } from "@/redux/feature/auth/auth.api";
 import Password from "@/component/login/password";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Page() {
   const [login] = useLogInMutation();
@@ -75,6 +76,15 @@ export default function Page() {
                   Login
                 </button>
               </form>
+              <p className="mt-4 text-center text-sm text-gray-600">
+                Don’t have an account?{" "}
+                <Link
+                  href="/register"
+                  className="text-blue-500 hover:underline"
+                >
+                  Register here
+                </Link>
+              </p>
             </div>
             <div>
               <Image
