@@ -9,13 +9,14 @@ import { useState } from "react";
 export default function ExploreTour() {
   const [page, setCurrentPage] = useState(0);
   const [limit, setLimit] = useState(10);
+  const [sort, setSort] = useState("desc");
   console.log(limit);
   console.log(page);
   const {
     data: listingData,
     isLoading,
     error,
-  } = useGetALlListingQuery({ page, limit });
+  } = useGetALlListingQuery({ page, limit, sort });
   const totalData = listingData?.data?.meta?.total || 0;
   const totalPages = Math.ceil(totalData / limit);
 
@@ -61,7 +62,11 @@ export default function ExploreTour() {
               </div>
               <div className="flex flex-col gap2">
                 <label className="text-sm font-sans">sort</label>
-                <select defaultValue="" className="border p-1 rounded-sm">
+                <select
+                  defaultValue=""
+                  className="border p-1 rounded-sm"
+                  onChange={(e) => setSort(e.target.value)}
+                >
                   <option className="text-sm font-sans" value="asec">
                     asec
                   </option>
