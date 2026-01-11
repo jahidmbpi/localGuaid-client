@@ -5,6 +5,7 @@ import Password from "@/helper/password";
 import { useRegisterMutation } from "@/redux/feature/user/user.api";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 type Inputs = {
   name: string;
@@ -15,6 +16,8 @@ type Inputs = {
 
 export default function Page() {
   const [Register] = useRegisterMutation();
+
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -23,17 +26,16 @@ export default function Page() {
   } = useForm<Inputs>();
   const onSubmit = async (data: any) => {
     const { Image, ...updatedata } = data;
-    console.log(Image);
-    console.log(updatedata);
+
     const fromdata = new FormData();
     fromdata.append("data", JSON.stringify(updatedata));
     if (data.Image) {
       fromdata.append("file", Image);
     }
-
-    console.log("Form Data:", data);
     const response = await Register(fromdata).unwrap();
-    console.log(response);
+    if (response.success === true) {
+      router.push("/login");
+    }
   };
   return (
     <div className=" max-w-4xl mx-auto  items-center justify-center md:h-screen h-full flex ">

@@ -88,7 +88,7 @@ export default function FileUpload({
 
         <div className="flex flex-1 items-center gap-2">
           {files.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground hidden md:block">
               Chose your profile (max {maxFiles} files)
             </p>
           ) : (
