@@ -1,6 +1,40 @@
+"use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import FileUpload from "@/helper/fileOpload";
+import Password from "@/helper/password";
+import { useRegisterMutation } from "@/redux/feature/user/user.api";
+
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+type Inputs = {
+  name: string;
+  email: string;
+  password: string;
+  Image?: File;
+};
 
 export default function Page() {
+  const [Register] = useRegisterMutation();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit = async (data: any) => {
+    const { Image, ...updatedata } = data;
+    console.log(Image);
+    console.log(updatedata);
+    const fromdata = new FormData();
+    fromdata.append("data", JSON.stringify(updatedata));
+    if (data.Image) {
+      fromdata.append("file", Image);
+    }
+
+    console.log("Form Data:", data);
+    const response = await Register(fromdata).unwrap();
+    console.log(response);
+  };
   return (
     <div className=" max-w-4xl mx-auto  items-center justify-center md:h-screen h-full flex ">
       <section className="w-full">
@@ -14,72 +48,69 @@ export default function Page() {
               </h3>
             </div>
 
-            <form action="#!">
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-4">
                 <div>
-                  <label
-                    htmlFor="firstName"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    First Name <span className="text-red-500">*</span>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Name <span className="text-red-500">*</span>
                   </label>
                   <input
+                    {...register("name", { required: "name is required" })}
                     type="text"
-                    name="firstName"
-                    id="firstName"
-                    placeholder="First Name"
-                    required
                     className="mt-1 block w-full border border-gray-300 rounded-md p-1.5 md:p-2 focus:ring-blue-500 focus:border-blue-500"
                   />
+                  {errors.name?.message && (
+                    <p className="text-red-500 text-sm">
+                      {String(errors.name.message)}
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="lastName"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Last Name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    id="lastName"
-                    placeholder="Last Name"
-                    required
-                    className="mt-1 block w-full border border-gray-300 rounded-md p-1.5 md:p-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label className="block text-sm font-medium text-gray-700">
                     Email <span className="text-red-500">*</span>
                   </label>
                   <input
+                    {...register("email", { required: "name is required" })}
                     type="email"
-                    name="email"
-                    id="email"
                     placeholder="name@example.com"
-                    required
                     className="mt-1 block w-full border border-gray-300 rounded-md p-1.5 md:p-2 focus:ring-blue-500 focus:border-blue-500"
                   />
+                  {errors.email?.message && (
+                    <p className="text-red-500 text-sm">
+                      {String(errors.email.message)}
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Password <span className="text-red-500">*</span>
+                  <label className="text-[14px] font-sans text-gray-700">
+                    Password
                   </label>
-                  <input
-                    type="password"
-                    name="password"
-                    id="password"
-                    required
-                    className="mt-1 block w-full border border-gray-300 rounded-md p-1.5 md:p-2 focus:ring-blue-500 focus:border-blue-500"
+                  <Password
+                    {...register("password", {
+                      required: "Password is required",
+                    })}
+                  ></Password>
+                  {errors.password?.message && (
+                    <p className="text-red-500 text-sm">
+                      {String(errors.password.message)}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <FileUpload
+                    maxFiles={1}
+                    onFilesChange={(files) => {
+                      const firstFile = files[0]?.file;
+                      if (firstFile instanceof File) {
+                        setValue("Image", firstFile, {
+                          shouldValidate: true,
+                          shouldDirty: true,
+                        });
+                      }
+                    }}
                   />
                 </div>
 
