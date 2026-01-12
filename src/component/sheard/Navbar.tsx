@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import image from "../../../public/logo.png";
-import { Menu, X } from "lucide-react";
+import { Menu, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getSidebarItems } from "../uitls/getNavItem";
 import { useMeQuery } from "@/redux/feature/auth/auth.api";
@@ -13,13 +13,16 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolly, setScrolly] = useState(0);
   const [visible, setVisible] = useState(false);
+  const [profile, setProfile] = useState(false);
 
-  const { data: userData } = useMeQuery(undefined);
-  console.log(userData);
+  const { data: user } = useMeQuery();
+  const userData = user?.data;
 
-  const navItems = userData?.data?.role
-    ? getSidebarItems(userData.data.role.toUpperCase())
+  const navItems = userData?.role
+    ? getSidebarItems(userData.role)
     : loggedOutNavItems;
+
+  console.log(userData);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,12 +42,12 @@ export default function Navbar() {
 
   return (
     <div
-      className={`fixed  w-full  left-0 top-0 z-50 transition-all duration-500 ease-in-out  ${
+      className={`fixed  w-full  left-0 top-0 z-50 transition-all duration-500 ease-in-out   ${
         visible ? "py-0  shadow-lg" : "py-7 "
       }`}
     >
-      <div className=" md:max-w-6xl mx-auto w-full overflow-hidden ">
-        <div className="flex items-center justify-between  relative inset-x-0  ">
+      <div className=" md:max-w-6xl mx-auto w-full relative">
+        <div className="flex items-center justify-between inset-x-0 ">
           <Link href="/">
             {" "}
             <div className="w-26 h-17.5">
@@ -70,30 +73,57 @@ export default function Navbar() {
           <div className="hidden md:block">
             <div className="flex items-center justify-center gap-2">
               <div>
-                {userData ? (
+                {!userData && (
                   <Link href="/login">
-                    <span className="text-gray-700 font-medium py-2 text-[15px] md:p-2 capitalize">
-                      log Out
-                    </span>
-                  </Link>
-                ) : (
-                  <Link
-                    href="/login"
-                    className="text-gray-700 font-medium py-2 text-[15px] md:p-2 capitalize"
-                  >
-                    log in
+                    <button className="text-gray-700 font-medium py-2 text-[15px] md:p-2  bg-blue-500 capitalize px-2 rounded-sm w-25 hover:cursor-pointer">
+                      log in
+                    </button>
                   </Link>
                 )}
               </div>
               {userData && (
-                <div>
-                  <Avatar className="w-10 h-10">
-                    <AvatarImage
-                      className="object-cover"
-                      src={userData?.data?.profilePhoto}
-                    />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
+                <div className="relative">
+                  <div
+                    onClick={() => setProfile(!profile)}
+                    className="cursor-pointer"
+                  >
+                    <Avatar className="w-10 h-10">
+                      <AvatarImage
+                        className="object-cover"
+                        src={userData.profilePhoto}
+                      />
+                      <AvatarFallback>
+                        <User />
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                  {profile && (
+                    <div className="absolute right-0 top-full mt-3 w-56 rounded-lg shadow-xl border border-gray-200 py-2 z-50  md:block bg-white">
+                      <div className="flex flex-col space-y-3.5 text-gray-700 p-4 ">
+                        <p className="text-sm font-bold font-sans capitalize">
+                          profile
+                        </p>
+                        <p className="text-sm font-bold font-sans capitalize">
+                          update profile
+                        </p>
+                        <p className="text-sm font-bold font-sans capitalize">
+                          hello
+                        </p>
+                        <p className="text-sm font-bold font-sans capitalize">
+                          hello
+                        </p>
+                        <p className="text-sm font-bold font-sans capitalize">
+                          hello
+                        </p>
+                        <Link
+                          href="/login"
+                          className="text-gray-700 font-medium  text-[15px] capitalize"
+                        >
+                          log out
+                        </Link>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -106,6 +136,8 @@ export default function Navbar() {
             {open ? <X size={32} /> : <Menu size={32} />}
           </div>
         </div>
+
+        {/* mobile menu */}
         <div className="absolute top-0 left-0 w-[80%] overflow-hidden z-10">
           <div
             className={`${
