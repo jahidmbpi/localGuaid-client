@@ -47,7 +47,7 @@ export default function Navbar() {
       }`}
     >
       <div className=" md:max-w-6xl mx-auto w-full relative">
-        <div className="flex items-center justify-between inset-x-0 ">
+        <div className="flex items-center justify-between inset-x-0">
           <Link href="/">
             {" "}
             <div className="w-26 h-17.5">
@@ -130,7 +130,7 @@ export default function Navbar() {
           </div>
 
           <div
-            className="md:hidden cursor-pointer text-gray-800 "
+            className="md:hidden cursor-pointer text-gray-800 pr-2 "
             onClick={() => setOpen(!open)}
           >
             {open ? <X size={32} /> : <Menu size={32} />}
