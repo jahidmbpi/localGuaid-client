@@ -100,9 +100,12 @@ export default function Navbar() {
                   {profile && (
                     <div className="absolute right-0 top-full mt-3 w-56 rounded-lg shadow-xl border border-gray-200 py-2 z-50  md:block bg-white">
                       <div className="flex flex-col space-y-3.5 text-gray-700 p-4 ">
-                        <p className="text-sm font-bold font-sans capitalize">
+                        <Link
+                          href="/profile"
+                          className="text-sm font-bold font-sans capitalize"
+                        >
                           profile
-                        </p>
+                        </Link>
                         <p className="text-sm font-bold font-sans capitalize">
                           update profile
                         </p>
