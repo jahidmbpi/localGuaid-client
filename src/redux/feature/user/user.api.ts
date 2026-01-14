@@ -15,7 +15,27 @@ export const userApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    updateUserByID: builder.mutation({
+      query: ({ userInfo, id }) => ({
+        url: `/user/update/${id}`,
+        method: "PATCH",
+        data: userInfo,
+      }),
+    }),
+
+    getUserById: builder.query({
+      query: (id) => ({
+        url: `/user/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useRegisterMutation, useGetALlUserQuery } = userApi;
+export const {
+  useRegisterMutation,
+  useGetALlUserQuery,
+  useUpdateUserByIDMutation,
+  useGetUserByIdQuery,
+} = userApi;

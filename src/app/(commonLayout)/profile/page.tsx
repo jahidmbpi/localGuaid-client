@@ -4,6 +4,7 @@ import { Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMeQuery } from "@/redux/feature/auth/auth.api";
 import Loader from "@/helper/loader";
+import Link from "next/link";
 
 export default function UserProfilePage() {
   const { data: user, isLoading } = useMeQuery();
@@ -44,10 +45,13 @@ export default function UserProfilePage() {
                 </p>
               </div>
 
-              <Button variant="outline" className="flex gap-2 w-25">
-                <Edit className="w-4 h-4" />
-                Edit Profile
-              </Button>
+              <Link href={`/profile/${userData!.id}`}>
+                {" "}
+                <Button variant="outline" className="flex gap-2 w-25">
+                  <Edit className="w-4 h-4" />
+                  Edit Profile
+                </Button>
+              </Link>
             </div>
           </div>
 
