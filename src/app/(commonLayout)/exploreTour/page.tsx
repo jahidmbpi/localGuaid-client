@@ -105,6 +105,8 @@ export default function ExploreTour() {
                     src={listing.images[0]}
                     alt={listing.title}
                     fill
+                    sizes="100"
+                    loading="eager"
                     className="object-cover rounded-sm"
                   />
                 </div>
