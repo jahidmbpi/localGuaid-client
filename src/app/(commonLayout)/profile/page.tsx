@@ -15,17 +15,19 @@ export default function UserProfilePage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto min-h-screen px-4">
-      <div className="flex flex-col items-center justify-center min-h-[135vh] md:min-h-screen">
+    <div className="max-w-6xl mx-auto px-4">
+      <div className="flex flex-col items-center justify-center min-h-screen md:min-h-[120vh]">
         <div className="w-full max-w-4xl space-y-6">
           <div className="flex flex-col items-center md:items-start gap-4  w-full">
-            <Image
-              src={userData?.profilePhoto || "/avatar.png"}
-              alt="User"
-              width={180}
-              height={180}
-              className="rounded-full border object-cover"
-            />
+            <div className="">
+              <Image
+                src={userData?.profilePhoto || "/avatar.png"}
+                alt="User"
+                width={1000}
+                height={1000}
+                className="rounded-full border object-cover w-40 h-38  p-1"
+              />
+            </div>
 
             <div className="flex flex-col items-center md:items-start md:flex-row justify-between w-full space-y-4">
               <div className="space-y-1 text-center md:text-left">
@@ -47,7 +49,10 @@ export default function UserProfilePage() {
 
               <Link href={`/profile/${userData!.id}`}>
                 {" "}
-                <Button variant="outline" className="flex gap-2 w-25">
+                <Button
+                  variant="outline"
+                  className="flex gap-2 w-25 cursor-pointer"
+                >
                   <Edit className="w-4 h-4" />
                   Edit Profile
                 </Button>

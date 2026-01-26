@@ -87,7 +87,7 @@ export default function Navbar() {
                     onClick={() => setProfile(!profile)}
                     className="cursor-pointer"
                   >
-                    <Avatar className="w-10 h-10">
+                    <Avatar className="w-10 h-10 ">
                       <AvatarImage
                         className="object-cover"
                         src={userData.profilePhoto}
