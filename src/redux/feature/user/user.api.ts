@@ -22,6 +22,7 @@ export const userApi = baseApi.injectEndpoints({
         method: "PATCH",
         data: userInfo,
       }),
+      invalidatesTags: ["USER"],
     }),
 
     getUserById: builder.query({
@@ -29,6 +30,7 @@ export const userApi = baseApi.injectEndpoints({
         url: `/user/${id}`,
         method: "GET",
       }),
+      providesTags: ["USER"],
     }),
   }),
 });
@@ -36,6 +38,6 @@ export const userApi = baseApi.injectEndpoints({
 export const {
   useRegisterMutation,
   useGetALlUserQuery,
-  useUpdateUserByIDMutation,
   useGetUserByIdQuery,
+  useUpdateUserByIDMutation,
 } = userApi;

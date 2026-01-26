@@ -6,6 +6,7 @@ import {
 } from "@/redux/feature/user/user.api";
 import { X } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { use, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -24,6 +25,7 @@ export default function UpdateProfilePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const router = useRouter();
   const { id } = use(params);
   const { data: user } = useGetUserByIdQuery(id);
   const userdata = user?.data;
@@ -50,7 +52,25 @@ export default function UpdateProfilePage({
   });
 
   const onSubmit = async (data: FormValues) => {
-    console.log(data, "data from from");
+    const formData = new FormData();
+    const { profilePhoto, ...updatedData } = data;
+    formData.append("data", JSON.stringify(updatedData));
+    if (profilePhoto) {
+      formData.append("file", profilePhoto[0]);
+    }
+
+    try {
+      const response = await updateUser({
+        userInfo: formData,
+        id,
+      }).unwrap();
+
+      if (response.statusCode === 200) {
+        router.push("/profile");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
