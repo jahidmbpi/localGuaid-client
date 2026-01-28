@@ -39,7 +39,7 @@ export default function Guaid() {
               className=" p-2 h-70 w-full object-cover rounded-2xl"
             />
             <div className="absolute -bottom-2 left-6 transition-all group-hover:-translate-y-8 duration-300 ease-out">
-              <h2 className="text-xl font-medium">{guaid.name}</h2>
+              <h2 className="text-xl font-medium uppercase">{guaid.name}</h2>
               <p className="text-sm text-gray-500 opacity-0 group-hover:opacity-100">
                 Professional Travel Guide
               </p>

@@ -24,7 +24,18 @@ export const listingApi = baseApi.injectEndpoints({
         params,
       }),
     }),
+
+    getListingById: builder.query({
+      query: (id) => ({
+        url: `/listing/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetPopularListingQuery, useGetALlListingQuery } = listingApi;
+export const {
+  useGetPopularListingQuery,
+  useGetALlListingQuery,
+  useGetListingByIdQuery,
+} = listingApi;

@@ -3,7 +3,9 @@
 import Loader from "@/helper/loader";
 import PaginationC from "@/helper/pagination";
 import { useGetALlListingQuery } from "@/redux/feature/listing/listing.api";
+
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function ExploreTour() {
@@ -36,8 +38,8 @@ export default function ExploreTour() {
   console.log(listingData.data.meta);
   return (
     <div className="max-w-6xl mx-auto min-h-screen">
-      <div className="flex mt-20 flex-row">
-        <div className="w-50 mt-17 border border-r-2 h-screen rounded-sm px-2 ">
+      <div className="flex mt-20 flex-col md:flex-row gap-2">
+        <div className="md:w-50 mt-10 md:mt-28  md:border-2  rounded-sm px-2 ">
           <div>
             <h2 className="text-[18px] font-sans font-medium mt-2">
               filter listing
@@ -116,12 +118,13 @@ export default function ExploreTour() {
                   <p className="text-sm text-gray-600 line-clamp-3">
                     {listing.description}
                   </p>
-                  <p className="text-end text-sm text-blue-600">see more..</p>
+                  <Link href={`/tourDetails/${listing.id}`}>
+                    <p className="text-end text-sm text-blue-600">see more..</p>
+                  </Link>
                 </div>
               </div>
             ))}
           </div>
-          {/* this is paginton */}
         </div>
       </div>
       <PaginationC
