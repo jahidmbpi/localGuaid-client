@@ -52,9 +52,14 @@ export default function UpdateProfilePage({
   });
 
   const onSubmit = async (data: FormValues) => {
+    // console.log(data);
     const formData = new FormData();
     const { profilePhoto, ...updatedData } = data;
-    formData.append("data", JSON.stringify(updatedData));
+    Object.entries(updatedData).forEach(([key, value]) => {
+      if (value !== undefined && value !== "") {
+        formData.append(key, value as string);
+      }
+    });
     if (profilePhoto) {
       formData.append("file", profilePhoto[0]);
     }
@@ -95,7 +100,7 @@ export default function UpdateProfilePage({
             <label className="block font-medium mb-1">Email</label>
             <input
               type="email"
-              {...register("email", { required: "Email is required" })}
+              {...register("email")}
               className="w-full border rounded px-3 py-2"
             />
             {errors.email && (

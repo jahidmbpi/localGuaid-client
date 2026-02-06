@@ -10,7 +10,6 @@ export const role = {
 };
 
 export const getSidebarItems = (userRole: TRole) => {
-  console.log(userRole);
   switch (userRole) {
     case role.admin:
       return [...adminNavItems];

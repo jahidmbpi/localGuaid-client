@@ -22,7 +22,7 @@ export default function Navbar() {
     ? getSidebarItems(userData.role)
     : loggedOutNavItems;
 
-  console.log(userData);
+  // console.log(userData);
 
   useEffect(() => {
     const handleScroll = () => {
