@@ -12,8 +12,8 @@ export default function ExploreTour() {
   const [page, setCurrentPage] = useState(0);
   const [limit, setLimit] = useState(10);
   const [sort, setSort] = useState("desc");
-  console.log(limit);
-  console.log(page);
+  // console.log(limit);
+  // console.log(page);
   const {
     data: listingData,
     isLoading,
@@ -32,10 +32,10 @@ export default function ExploreTour() {
       <div className="text-center mt-20 text-red-500">Something went wrong</div>
     );
   }
-  console.log(error);
-  console.log("this is page", pageArray);
+  // console.log(error);
+  // console.log("this is page", pageArray);
 
-  console.log(listingData.data.meta);
+  // console.log(listingData.data.meta);
   return (
     <div className="max-w-6xl mx-auto min-h-screen">
       <div className="flex mt-20 flex-col md:flex-row gap-2">

@@ -1,6 +1,7 @@
 "use client";
 import { useGetPopularListingQuery } from "@/redux/feature/listing/listing.api";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Popular() {
   const {
@@ -8,8 +9,8 @@ export default function Popular() {
     error,
     isLoading,
   } = useGetPopularListingQuery(undefined);
-  console.log(popularListing);
-  console.log("error", error);
+  // console.log(popularListing);
+  // console.log("error", error);
   return (
     <div className="max-w-6xl mx-auto px-2">
       {/* Heading */}
@@ -45,7 +46,9 @@ export default function Popular() {
               <p className="text-sm text-gray-600 line-clamp-3">
                 {listing.description}
               </p>
-              <p className="text-end text-sm text-blue-600">see more..</p>
+              <Link href={`/tourDetails/${listing.id}`}>
+                <p className="text-end text-sm text-blue-600">see more..</p>
+              </Link>
             </div>
           </div>
         ))}
