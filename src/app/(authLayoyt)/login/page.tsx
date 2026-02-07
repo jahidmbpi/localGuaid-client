@@ -6,12 +6,16 @@ import Image from "next/image";
 import photo from "../../../../public/proflio.png";
 import { useLogInMutation } from "@/redux/feature/auth/auth.api";
 import Password from "@/component/login/password";
-import { useRouter } from "next/navigation";
+
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Page() {
   const [login] = useLogInMutation();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+
   const {
     register,
     handleSubmit,
@@ -21,7 +25,7 @@ export default function Page() {
     console.log(data);
     const result = await login(data).unwrap();
     console.log(result);
-    router.push("/");
+    router.push(callbackUrl);
   };
 
   return (
