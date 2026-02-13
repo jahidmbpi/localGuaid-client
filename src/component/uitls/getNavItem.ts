@@ -1,7 +1,5 @@
 import { TRole } from "@/types/role";
-import { adminNavItems } from "./adminNavItems";
-import { guideNavItems } from "./guideNavItems";
-import { touristNavItems } from "./touristNavItems";
+import { adminNavItems, guideNavItems, touristNavItems } from "./nav/navItem";
 
 export const role = {
   admin: "ADMIN",

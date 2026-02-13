@@ -1,6 +1,6 @@
 "use client";
 
-import { howItWorksData } from "@/component/uitls/cardtItem";
+import { howItWorksData } from "@/component/uitls/home/cardtItem";
 
 export default function HowItWork() {
   return (

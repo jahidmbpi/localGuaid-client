@@ -1,5 +1,6 @@
 "use client";
-import { choseUsItem } from "@/component/uitls/choseItem";
+
+import { choseUsItem } from "@/component/uitls/home/choseItem";
 
 export default function WhyChooseUs() {
   return (

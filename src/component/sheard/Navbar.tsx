@@ -5,9 +5,10 @@ import { Menu, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getSidebarItems } from "../uitls/getNavItem";
 import { useMeQuery } from "@/redux/feature/auth/auth.api";
-import { loggedOutNavItems } from "../uitls/loggedOutNavItems";
+
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { loggedOutNavItems } from "../uitls/nav/navItem";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
