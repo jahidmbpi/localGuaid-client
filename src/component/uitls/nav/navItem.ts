@@ -27,7 +27,7 @@ export const guideNavItems = [
   },
   {
     label: "Dashboard",
-    path: "/guide/dashboard",
+    path: "/dashboard",
   },
 ];
 export const loggedOutNavItems = [

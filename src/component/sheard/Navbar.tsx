@@ -15,15 +15,12 @@ export default function Navbar() {
   const [scrolly, setScrolly] = useState(0);
   const [visible, setVisible] = useState(false);
   const [profile, setProfile] = useState(false);
-
   const { data: user } = useMeQuery();
   const userData = user?.data;
 
   const navItems = userData?.role
     ? getSidebarItems(userData.role)
     : loggedOutNavItems;
-
-  // console.log(userData);
 
   useEffect(() => {
     const handleScroll = () => {

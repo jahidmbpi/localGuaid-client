@@ -12,7 +12,8 @@ export const role = {
   guaid: "GUIDE",
 };
 
-export const getSidebarItems = (userRole: TRole) => {
+export const getDeshbordSidebarItems = (userRole: TRole) => {
+  if (!userRole) return [];
   switch (userRole) {
     case role.admin:
       return [...adminSidebarItem];
