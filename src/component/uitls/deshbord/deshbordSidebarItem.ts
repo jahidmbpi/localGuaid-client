@@ -1,3 +1,4 @@
+const BASE = "/dashboard";
 export const adminSidebarItem = [
   {
     label: "User Management",
@@ -5,7 +6,7 @@ export const adminSidebarItem = [
   },
   {
     label: "Listing Management",
-    path: "/become-guide",
+    path: "/managelisting",
   },
 
   {
@@ -37,6 +38,6 @@ export const guaidSidebarItem = [
 
   {
     label: "My Listings",
-    path: "/register",
+    path: `${BASE}/mylisting`,
   },
 ];
