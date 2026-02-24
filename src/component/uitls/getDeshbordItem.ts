@@ -13,6 +13,7 @@ export const role = {
 };
 
 export const getDeshbordSidebarItems = (userRole: TRole) => {
+  console.log(userRole, "this is user role from function");
   if (!userRole) return [];
   switch (userRole) {
     case role.admin:
