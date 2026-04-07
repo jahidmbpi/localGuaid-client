@@ -9,7 +9,14 @@ export const guaidApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getGuaidListing: builder.query<any, void>({
+      query: () => ({
+        url: "/guaid/guaidlisting",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useGetPopularGuaidQuery } = guaidApi;
+export const { useGetPopularGuaidQuery, useGetGuaidListingQuery } = guaidApi;

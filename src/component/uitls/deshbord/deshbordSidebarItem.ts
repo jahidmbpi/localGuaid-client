@@ -29,11 +29,11 @@ export const turistSidebarItem = [
 export const guaidSidebarItem = [
   {
     label: "Upcoming bookings",
-    path: "/exploreTour",
+    path: `${BASE}/upcomeingBooking`,
   },
   {
     label: "Pending requests",
-    path: "/become-guide",
+    path: `${BASE}/pendingRequest`,
   },
 
   {

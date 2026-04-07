@@ -11,7 +11,7 @@ export default function Guaid() {
     error,
   } = useGetPopularGuaidQuery(undefined);
   // console.log(error);
-  // console.log(popularGuaidData);
+  console.log(popularGuaidData);
   // console.log(isLoading);
   return (
     <div className="max-w-6xl mx-auto px-2">

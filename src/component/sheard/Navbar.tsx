@@ -17,6 +17,7 @@ export default function Navbar() {
   const [profile, setProfile] = useState(false);
   const { data: user } = useMeQuery();
   const userData = user?.data;
+  console.log(userData);
 
   const navItems = userData?.role
     ? getSidebarItems(userData.role)

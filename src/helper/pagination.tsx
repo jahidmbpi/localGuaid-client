@@ -43,7 +43,7 @@ export default function PaginationC({
                 "w-10 h-10 rounded-md font-medium transition-all",
                 page === item
                   ? "bg-green-700 text-white hover:bg-green-700 hover:text-white"
-                  : "bg-[#1d65fc] text-white hover:bg-[#1d65fc] hover:text-white"
+                  : "bg-[#1d65fc] text-white hover:bg-[#1d65fc] hover:text-white",
               )}
             >
               {item}

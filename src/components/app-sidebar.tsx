@@ -14,6 +14,9 @@ import {
 import { useMeQuery } from "@/redux/feature/auth/auth.api";
 import { getDeshbordSidebarItems } from "@/component/uitls/getDeshbordItem";
 
+import { House } from "lucide-react";
+import Link from "next/link";
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: user } = useMeQuery();
 
@@ -28,15 +31,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarMenu className="gap-1">
-          {navItems.map((item) => (
-            <SidebarMenuItem key={item.label}>
-              <SidebarMenuButton asChild isActive={false}>
-                <a href={item.path}>{item.label}</a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
+        <div className="relative h-full">
+          <SidebarMenu className="gap-1">
+            {navItems.map((item) => (
+              <SidebarMenuItem key={item.label}>
+                <SidebarMenuButton asChild isActive={false}>
+                  <a href={item.path}>{item.label}</a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+          <SidebarMenu className="absolute left-2 bottom-10">
+            {" "}
+            <Link href="/" className="flex items-center gap-2 cursor-pointer">
+              <House />
+              <button className="cursor-pointer">Home</button>
+            </Link>
+          </SidebarMenu>
+        </div>
       </SidebarContent>
 
       <SidebarRail />
