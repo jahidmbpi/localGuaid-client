@@ -18,7 +18,15 @@ export const bookingApi = baseApi.injectEndpoints({
         params,
       }),
     }),
+
+    updateBookingStatus: builder.mutation({
+      query: ({ id, status }) => ({
+        url: `/booking/status/${id}`,
+        method: "PATCH",
+        body: { status },
+      }),
+    }),
   }),
 });
 
-export const { useMyBookingQuery, useTuristBookingQuery } = bookingApi;
+export const { useMyBookingQuery, useTuristBookingQuery, useUpdateBookingStatusMutation } = bookingApi;
