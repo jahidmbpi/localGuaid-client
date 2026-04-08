@@ -9,6 +9,7 @@ export const bookingApi = baseApi.injectEndpoints({
         url: "/booking/mybooking",
         method: "GET",
       }),
+      providesTags: ["Booking"],
     }),
 
     turistBooking: builder.query({
@@ -21,12 +22,17 @@ export const bookingApi = baseApi.injectEndpoints({
 
     updateBookingStatus: builder.mutation({
       query: ({ id, status }) => ({
-        url: `/booking/status/${id}`,
+        url: `/booking/${id}`,
         method: "PATCH",
-        body: { status },
+        data: { status },
       }),
+      invalidatesTags: ["Booking"],
     }),
   }),
 });
 
-export const { useMyBookingQuery, useTuristBookingQuery, useUpdateBookingStatusMutation } = bookingApi;
+export const {
+  useMyBookingQuery,
+  useTuristBookingQuery,
+  useUpdateBookingStatusMutation,
+} = bookingApi;

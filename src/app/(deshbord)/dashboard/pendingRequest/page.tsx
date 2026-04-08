@@ -2,19 +2,24 @@
 "use client";
 
 import Loader from "@/helper/loader";
-import { useMyBookingQuery } from "@/redux/feature/booking/booking.api";
+import {
+  useMyBookingQuery,
+  useUpdateBookingStatusMutation,
+} from "@/redux/feature/booking/booking.api";
 import { MoreVertical } from "lucide-react";
 import { useState } from "react";
 
 export default function Pendingrequest() {
   const { data: pendingData, isLoading, error } = useMyBookingQuery();
   console.log(pendingData?.data);
-
+  const [updateStatus] = useUpdateBookingStatusMutation();
   const formatDate = (date: string) => new Date(date).toLocaleDateString();
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const handleUpdate = async (id: string, status: string) => {
-    console.log(id, status);
     try {
+      console.log(id, status);
+      const result = await updateStatus({ id, status }).unwrap();
+      console.log(result);
       alert(`Booking ${status} ✅`);
     } catch (err) {
       console.error(err);
@@ -27,7 +32,6 @@ export default function Pendingrequest() {
     return <Loader />;
   }
 
-  // ❌ Error state
   if (error) {
     return (
       <p className="text-center mt-10 text-red-500">Failed to load bookings</p>
@@ -45,15 +49,15 @@ export default function Pendingrequest() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+      {/* <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
         Pending Requests
-      </h1>
+      </h1> */}
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
         {pendingData.data.data?.map((data: any) => (
           <div
             key={data.id}
-            className="bg-white rounded-2xl shadow-md p-6 border hover:shadow-xl transition"
+            className="bg-white rounded-2xl shadow-md p-4 border hover:shadow-xl transition"
           >
             {/* Header */}
             <div className="flex justify-between items-center mb-3">
@@ -78,7 +82,7 @@ export default function Pendingrequest() {
                     <div className="absolute right-0 mt-2 w-32 bg-white border rounded-lg shadow-md z-10">
                       <button
                         onClick={() => {
-                          handleUpdate(data.id, "CONFRIMED");
+                          handleUpdate(data.id, "CONFIRMED");
                           setOpenMenuId(null);
                         }}
                         className="block w-full text-left px-3 py-2 text-sm hover:bg-green-100"
@@ -88,7 +92,7 @@ export default function Pendingrequest() {
 
                       <button
                         onClick={() => {
-                          handleUpdate(data.id, "CENCELLED");
+                          handleUpdate(data.id, "CANCELLED");
                           setOpenMenuId(null);
                         }}
                         className="block w-full text-left px-3 py-2 text-sm hover:bg-red-100"
@@ -135,7 +139,7 @@ export default function Pendingrequest() {
               </span>
               {/* View Details */}
               <button
-                className="px-2 bg-blue-600 text-white py-1.5 rounded-lg hover:bg-blue-700"
+                className="px-2 bg-blue-600 text-white py-1.5 rounded-lg hover:bg-blue-700 text-sm font-sans"
                 onClick={() => alert(`View details for ${data.id}`)}
               >
                 View Details
