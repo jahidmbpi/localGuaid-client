@@ -4,6 +4,15 @@ import { baseApi } from "@/redux/baseApi";
 
 export const bookingApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    createBooking: builder.mutation({
+      query: ({ id, BookingData }) => ({
+        url: `/booking/create-booking/${id}`,
+        method: "POST",
+        data: BookingData,
+      }),
+      invalidatesTags: ["Booking"],
+    }),
+
     myBooking: builder.query<any, void>({
       query: () => ({
         url: "/booking/mybooking",
@@ -40,6 +49,7 @@ export const bookingApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useCreateBookingMutation,
   useMyBookingQuery,
   useTuristBookingQuery,
   useUpdateBookingStatusMutation,

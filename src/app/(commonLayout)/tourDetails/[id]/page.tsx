@@ -4,9 +4,28 @@
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useGetListingByIdQuery } from "@/redux/feature/listing/listing.api";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Datepicker } from "@/component/uitls/datePicket";
+import { Input } from "@/components/ui/input";
+import { useCreateBookingMutation } from "@/redux/feature/booking/booking.api";
+type FormData = {
+  startDate: Date;
+  endDate: Date;
+  groupSize: number;
+};
 
 export default function Details() {
+  const [open, setOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
+  const [Booking] = useCreateBookingMutation();
+
+  const {
+    control,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
 
   const { data, isLoading, error } = useGetListingByIdQuery(id!, {
     skip: !id,
@@ -21,7 +40,20 @@ export default function Details() {
   }
 
   const tour = data.data;
+  const guideId = tour.guideId;
 
+  const onSubmit = async (data: FormData) => {
+    const BookingData = { ...data, guideId };
+    console.log(BookingData);
+    try {
+      const result = await Booking({ id, BookingData });
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+    reset();
+    setOpen(false);
+  };
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 space-y-4 mt-20">
       <div>
@@ -75,9 +107,106 @@ export default function Details() {
         </div>
       </div>
 
-      <button className="w-full md:w-auto bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition">
+      <button
+        onClick={() => setOpen(true)}
+        className="w-full md:w-auto bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition"
+      >
         Book This Tour
       </button>
+      {open && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 w-[90%] max-w-md relative">
+            <button
+              onClick={() => setOpen(false)}
+              className="absolute top-2 right-3 text-gray-500 text-xl"
+            >
+              ×
+            </button>
+
+            <h2 className="text-2xl font-bold mb-4">Book Tour</h2>
+
+            <div className="space-y-3">
+              <form className="space-y-4">
+                <div>
+                  <label className="block mb-2">Start Date</label>
+
+                  <Controller
+                    control={control}
+                    rules={{
+                      required: "Start date is required",
+                    }}
+                    name="startDate"
+                    render={({ field }) => (
+                      <Datepicker
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                  {errors.startDate && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.startDate.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block mb-2">End Date</label>
+
+                  <Controller
+                    control={control}
+                    rules={{
+                      required: "end Date is required",
+                    }}
+                    name="endDate"
+                    render={({ field }) => (
+                      <Datepicker
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                  {errors.endDate && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.endDate.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="block mb-2">Group Size</label>
+
+                  <Controller
+                    control={control}
+                    rules={{ required: "group size required" }}
+                    name="groupSize"
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        type="text"
+                        placeholder="Enter group size"
+                        className="w-full border rounded-lg px-3 py-2"
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
+                    )}
+                  />
+                  {errors.groupSize && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.groupSize.message}
+                    </p>
+                  )}
+                </div>
+              </form>
+
+              <button
+                onClick={handleSubmit(onSubmit)}
+                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+              >
+                Confirm Booking
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
