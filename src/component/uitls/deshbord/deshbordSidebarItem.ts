@@ -18,11 +18,15 @@ export const adminSidebarItem = [
 export const turistSidebarItem = [
   {
     label: "My Trips (Upcoming/Past)",
-    path: "/exploreTour",
+    path: `${BASE}/mytrip`,
   },
   {
     label: "Wishlist",
-    path: "/become-guide",
+    path: `${BASE}/wishList`,
+  },
+  {
+    label: "My Bookings",
+    path: `${BASE}/myBooking`,
   },
 ];
 
