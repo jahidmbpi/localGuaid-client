@@ -3,6 +3,7 @@
 
 import Loader from "@/helper/loader";
 import { useTuristBookingQuery } from "@/redux/feature/booking/booking.api";
+import { usePaymentInitMutation } from "@/redux/feature/payment/payment.api";
 import {
   View,
   Calendar,
@@ -18,8 +19,11 @@ import { useState } from "react";
 
 export default function Booking() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [paymentUrl, setPaymentUrl] = useState("");
   const [page, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [payment] = usePaymentInitMutation();
 
   const {
     data: bookingData,
@@ -61,8 +65,46 @@ export default function Booking() {
     }
   };
 
+  const paymentInit = async (id: string) => {
+    try {
+      const result = await payment(id).unwrap();
+      console.log(result);
+
+      if (result?.statusCode === 201) {
+        setIsModalOpen(true);
+        setPaymentUrl(result?.data?.paymentUrl);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col px-3 sm:px-4 py-6">
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-999 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-xl p-6 w-87.5 shadow-xl">
+            <h2 className="text-xl font-bold text-green-600 mb-3">
+              make Payment
+            </h2>
+
+            <p className="text-gray-600 mb-5">
+              Payment initialized successfully
+            </p>
+
+            <button
+              onClick={() => {
+                setIsModalOpen(false);
+                window.open(paymentUrl, "_blank");
+              }}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+            >
+              payment
+            </button>
+          </div>
+        </div>
+      )}
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
@@ -119,8 +161,9 @@ export default function Booking() {
               {bookingData?.data?.data.map((item: any, index: number) => (
                 <tr
                   key={item.id}
-                  className={`hover:bg-blue-50 transition-colors duration-150 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                    }`}
+                  className={`hover:bg-blue-50 transition-colors duration-150 ${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  }`}
                 >
                   <td className="px-4 py-4">
                     <span className="font-mono text-sm text-gray-700  px-2 py-1 rounded">
@@ -149,10 +192,11 @@ export default function Booking() {
 
                   <td className="px-4 py-4">
                     <span
-                      className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${item.paymentStatus === "PAID"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-orange-100 text-orange-700"
-                        }`}
+                      className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                        item.paymentStatus === "PAID"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-orange-100 text-orange-700"
+                      }`}
                     >
                       <CreditCard className="w-3 h-3" />
                       {item.paymentStatus}
@@ -161,14 +205,14 @@ export default function Booking() {
 
                   <td className="px-4 py-4">
                     <span
-                      className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium shadow-sm ${item.status === "CONFIRMED"
-                        ? "bg-green-100 text-green-700 border border-green-200"
-                        : item.status === "PENDING"
-                          ? "bg-yellow-100 text-yellow-700 border border-yellow-200"
-                          : "bg-red-100 text-red-700 border border-red-200"
-                        }`}
+                      className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium shadow-sm ${
+                        item.status === "CONFIRMED" || "COMPLETED"
+                          ? "bg-green-100 text-green-700 border border-green-200"
+                          : item.status === "PENDING"
+                            ? "bg-yellow-100 text-yellow-700 border border-yellow-200"
+                            : "bg-red-100 text-red-700 border border-red-200"
+                      }`}
                     >
-                      {getStatusIcon(item.status)}
                       {item.status}
                     </span>
                   </td>
@@ -184,7 +228,7 @@ export default function Booking() {
                     <button
                       onClick={() =>
                         setOpenDropdown(
-                          openDropdown === item.id ? null : item.id
+                          openDropdown === item.id ? null : item.id,
                         )
                       }
                       className="p-2 hover:bg-gray-200 rounded-full transition"
@@ -205,8 +249,14 @@ export default function Booking() {
                         <button className="block w-full text-left px-4 py-2 text-red-500 hover:bg-red-50">
                           Delete
                         </button>
-                        <button className={`block w-full text-left px-4 py-2 ${item.paymentStatus === "UNPAID" ? "text-green-500 hover:bg-green-50" : "text-red-500 hover:bg-red-50"
-                          }`}>
+                        <button
+                          onClick={() => paymentInit(item.id)}
+                          className={`block w-full text-left px-4 py-2 ${
+                            item.paymentStatus === "UNPAID"
+                              ? "text-green-500 hover:bg-green-50"
+                              : "text-red-500 hover:bg-red-50"
+                          }`}
+                        >
                           Make Payment
                         </button>
                       </div>
@@ -237,12 +287,13 @@ export default function Booking() {
                 </div>
 
                 <span
-                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium shadow-sm ${item.status === "CONFIRMED"
-                    ? "bg-green-100 text-green-700 border border-green-200"
-                    : item.status === "PENDING"
-                      ? "bg-yellow-100 text-yellow-700 border border-yellow-200"
-                      : "bg-red-100 text-red-700 border border-red-200"
-                    }`}
+                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium shadow-sm ${
+                    item.status === "CONFIRMED"
+                      ? "bg-green-100 text-green-700 border border-green-200"
+                      : item.status === "PENDING"
+                        ? "bg-yellow-100 text-yellow-700 border border-yellow-200"
+                        : "bg-red-100 text-red-700 border border-red-200"
+                  }`}
                 >
                   {getStatusIcon(item.status)}
                   {item.status}
@@ -317,8 +368,9 @@ export default function Booking() {
         {bookingData && (
           <div className="flex flex-wrap gap-2 items-center justify-center">
             <button
-              className={`px-3 py-1 rounded-sm ${page === 1 ? "bg-gray-300" : "bg-blue-300"
-                }`}
+              className={`px-3 py-1 rounded-sm ${
+                page === 1 ? "bg-gray-300" : "bg-blue-300"
+              }`}
               onClick={() => setCurrentPage(page - 1)}
               disabled={page === 1}
             >
@@ -327,8 +379,9 @@ export default function Booking() {
 
             {pageArray.map((item) => (
               <button
-                className={`px-3 py-1 rounded-sm ${page === item ? "bg-green-500 text-white" : "bg-blue-300"
-                  }`}
+                className={`px-3 py-1 rounded-sm ${
+                  page === item ? "bg-green-500 text-white" : "bg-blue-300"
+                }`}
                 key={item}
                 onClick={() => setCurrentPage(item)}
               >
@@ -339,8 +392,9 @@ export default function Booking() {
             <button
               onClick={() => setCurrentPage(page + 1)}
               disabled={page === totalPages}
-              className={`px-3 py-1 rounded-sm ${page === totalPages ? "bg-gray-300" : "bg-blue-300"
-                }`}
+              className={`px-3 py-1 rounded-sm ${
+                page === totalPages ? "bg-gray-300" : "bg-blue-300"
+              }`}
             >
               Next
             </button>
