@@ -3,6 +3,7 @@ import HowItWork from "@/component/home/howItWork/HowItWork";
 import Guaid from "@/component/home/popularGuaid/Guaid";
 import Popular from "@/component/home/popularListing/Popular";
 import WhyChooseUs from "@/component/home/whyChoseUs/WhyChoseUs";
+import FAQ from "@/component/home/faq/FAQ";
 
 export default function Home() {
   return (
@@ -12,6 +13,8 @@ export default function Home() {
       <Popular />
       <Guaid />
       <WhyChooseUs />
+      <FAQ />
     </div>
   );
 }
+

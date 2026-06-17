@@ -5,10 +5,10 @@ import { Menu, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getSidebarItems } from "../uitls/getNavItem";
 import { useMeQuery } from "@/redux/feature/auth/auth.api";
-
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { loggedOutNavItems } from "../uitls/nav/navItem";
+import { ModeToggle } from "@/components/ModeToggle";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -41,9 +41,8 @@ export default function Navbar() {
 
   return (
     <div
-      className={`fixed  w-full  left-0 top-0 z-50 transition-all duration-500 ease-in-out   ${
-        visible ? "py-0  shadow-lg" : "py-7 "
-      }`}
+      className={`fixed  w-full  left-0 top-0 z-50 transition-all duration-500 ease-in-out   ${visible ? "py-0  shadow-lg" : "py-7 "
+        }`}
     >
       <div className=" md:max-w-6xl mx-auto w-full relative">
         <div className="flex items-center justify-between inset-x-0">
@@ -128,6 +127,7 @@ export default function Navbar() {
                   )}
                 </div>
               )}
+              <ModeToggle />
             </div>
           </div>
 
@@ -142,9 +142,8 @@ export default function Navbar() {
         {/* mobile menu */}
         <div className="absolute top-0 left-0 w-[80%] overflow-hidden z-10">
           <div
-            className={`${
-              open ? "translate-x-0 " : "-translate-x-full"
-            } transition-transform duration-700 ease-in-out w-full `}
+            className={`${open ? "translate-x-0 " : "-translate-x-full"
+              } transition-transform duration-700 ease-in-out w-full `}
           >
             <div className="block md:hidden  h-screen bg-[#111111]/80">
               <ul className="flex flex-col gap-4 text-sm font-medium font-mono items-start pt-25 text-[#f3f4f6] pl-4">
@@ -169,6 +168,9 @@ export default function Navbar() {
                     log Out
                   </h2>
                 )}
+                <div className="py-2">
+                  <ModeToggle />
+                </div>
               </ul>
             </div>
           </div>
