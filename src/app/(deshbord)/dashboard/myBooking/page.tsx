@@ -2,7 +2,11 @@
 "use client";
 
 import Loader from "@/helper/loader";
-import { useTuristBookingQuery } from "@/redux/feature/booking/booking.api";
+import { useMeQuery } from "@/redux/feature/auth/auth.api";
+import {
+  useTuristBookingQuery,
+  useGetAllBookingsQuery,
+} from "@/redux/feature/booking/booking.api";
 import { usePaymentInitMutation } from "@/redux/feature/payment/payment.api";
 import {
   View,
@@ -25,14 +29,30 @@ export default function Booking() {
   const [limit, setLimit] = useState(10);
   const [payment] = usePaymentInitMutation();
 
+  const { data: user, isLoading: isUserLoading } = useMeQuery();
+  const role = user?.data?.role;
+
   const {
-    data: bookingData,
-    isLoading,
-    error,
-  } = useTuristBookingQuery({
-    page,
-    limit,
-  });
+    data: touristBookingData,
+    isLoading: isTouristLoading,
+    error: touristError,
+  } = useTuristBookingQuery(
+    { page, limit },
+    { skip: role !== "TOURIST" }
+  );
+
+  const {
+    data: adminBookingData,
+    isLoading: isAdminLoading,
+    error: adminError,
+  } = useGetAllBookingsQuery(
+    { page, limit },
+    { skip: role !== "ADMIN" }
+  );
+
+  const bookingData = role === "ADMIN" ? adminBookingData : touristBookingData;
+  const isLoading = isUserLoading || (role === "ADMIN" ? isAdminLoading : isTouristLoading);
+  const error = role === "ADMIN" ? adminError : touristError;
 
   const totalData = bookingData?.data?.meta?.total || 0;
 
@@ -46,7 +66,7 @@ export default function Booking() {
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center bg-red-50 p-6 rounded-lg">
+        <div className="text-center bg-red-55 p-6 rounded-lg">
           <XCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
           <p className="text-red-600 font-medium">Something went Wrong</p>
         </div>
@@ -108,16 +128,16 @@ export default function Booking() {
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">
-          Booking list
+          {role === "ADMIN" ? "All Platform Bookings" : "My Bookings"}
         </h1>
 
         <p className="text-gray-600 text-sm sm:text-base">
-          total booking = {totalData}
+          Total Bookings: {totalData}
         </p>
       </div>
 
       {/* Table Container */}
-      <div className="bg-white rounded-xl  border border-gray-200  flex-1">
+      <div className="bg-white rounded-xl border border-gray-200 flex-1">
         {/* Desktop Table */}
         <div className="hidden lg:block ">
           <table className="w-full">
@@ -130,6 +150,12 @@ export default function Booking() {
                 <th className="px-4 py-4 text-left text-xs font-semibold text-gray-700 uppercase">
                   Guide ID
                 </th>
+
+                {role === "ADMIN" && (
+                  <th className="px-4 py-4 text-left text-xs font-semibold text-gray-700 uppercase">
+                    Tourist ID
+                  </th>
+                )}
 
                 <th className="px-4 py-4 text-center text-xs font-semibold text-gray-700 uppercase">
                   Group Size
@@ -158,7 +184,7 @@ export default function Booking() {
             </thead>
 
             <tbody className="divide-y divide-gray-100">
-              {bookingData?.data?.data.map((item: any, index: number) => (
+              {bookingData?.data?.data?.map((item: any, index: number) => (
                 <tr
                   key={item.id}
                   className={`hover:bg-blue-50 transition-colors duration-150 ${
@@ -166,16 +192,24 @@ export default function Booking() {
                   }`}
                 >
                   <td className="px-4 py-4">
-                    <span className="font-mono text-sm text-gray-700  px-2 py-1 rounded">
-                      {item.listingId.slice(0, 10)}..
+                    <span className="font-mono text-sm text-gray-700 px-2 py-1 rounded">
+                      {item.listingId?.slice(0, 10)}..
                     </span>
                   </td>
 
                   <td className="px-4 py-4">
-                    <span className="font-mono text-sm text-gray-700  px-2 py-1 rounded">
-                      {item.guideId.slice(0, 10)}
+                    <span className="font-mono text-sm text-gray-700 px-2 py-1 rounded">
+                      {item.guideId?.slice(0, 10)}..
                     </span>
                   </td>
+
+                  {role === "ADMIN" && (
+                    <td className="px-4 py-4">
+                      <span className="font-mono text-sm text-gray-700 px-2 py-1 rounded">
+                        {item.touristId?.slice(0, 10)}..
+                      </span>
+                    </td>
+                  )}
 
                   <td className="px-4 py-4 text-center">
                     <span className="inline-flex items-center gap-1 text-sm font-medium text-gray-700">
@@ -206,7 +240,7 @@ export default function Booking() {
                   <td className="px-4 py-4">
                     <span
                       className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium shadow-sm ${
-                        item.status === "CONFIRMED" || "COMPLETED"
+                        item.status === "CONFIRMED" || item.status === "COMPLETED"
                           ? "bg-green-100 text-green-700 border border-green-200"
                           : item.status === "PENDING"
                             ? "bg-yellow-100 text-yellow-700 border border-yellow-200"
@@ -249,16 +283,18 @@ export default function Booking() {
                         <button className="block w-full text-left px-4 py-2 text-red-500 hover:bg-red-50">
                           Delete
                         </button>
-                        <button
-                          onClick={() => paymentInit(item.id)}
-                          className={`block w-full text-left px-4 py-2 ${
-                            item.paymentStatus === "UNPAID"
-                              ? "text-green-500 hover:bg-green-50"
-                              : "text-red-500 hover:bg-red-50"
-                          }`}
-                        >
-                          Make Payment
-                        </button>
+                        {role === "TOURIST" && (
+                          <button
+                            onClick={() => paymentInit(item.id)}
+                            className={`block w-full text-left px-4 py-2 ${
+                              item.paymentStatus === "UNPAID"
+                                ? "text-green-500 hover:bg-green-50"
+                                : "text-red-500 hover:bg-red-50"
+                            }`}
+                          >
+                            Make Payment
+                          </button>
+                        )}
                       </div>
                     )}
                   </td>
@@ -270,7 +306,7 @@ export default function Booking() {
 
         {/* Mobile View */}
         <div className="lg:hidden divide-y divide-gray-200">
-          {bookingData?.data?.data.map((item: any) => (
+          {bookingData?.data?.data?.map((item: any) => (
             <div
               key={item.id}
               className="p-4 hover:bg-gray-50 transition-colors duration-150"
@@ -282,7 +318,7 @@ export default function Booking() {
                   </p>
 
                   <p className="font-mono text-sm font-semibold text-gray-800 bg-gray-100 px-2 py-1 rounded inline-block">
-                    {item.listingId.slice(0, 10)}..
+                    {item.listingId?.slice(0, 10)}..
                   </p>
                 </div>
 
@@ -307,20 +343,32 @@ export default function Booking() {
                   </p>
 
                   <p className="font-mono text-sm font-semibold text-gray-700">
-                    {item.guideId.slice(0, 10)}
+                    {item.guideId?.slice(0, 10)}
                   </p>
                 </div>
 
-                <div className="bg-blue-50 p-3 rounded-lg">
-                  <p className="text-xs font-medium text-gray-500 mb-1">
-                    Group Size
-                  </p>
+                {role === "ADMIN" ? (
+                  <div className="bg-purple-50 p-3 rounded-lg">
+                    <p className="text-xs font-medium text-gray-500 mb-1">
+                      Tourist ID
+                    </p>
 
-                  <p className="inline-flex items-center gap-1 text-sm font-bold text-blue-700">
-                    <Users className="w-4 h-4" />
-                    {item.groupSize}
-                  </p>
-                </div>
+                    <p className="font-mono text-sm font-semibold text-purple-700">
+                      {item.touristId?.slice(0, 10)}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="bg-blue-50 p-3 rounded-lg">
+                    <p className="text-xs font-medium text-gray-500 mb-1">
+                      Group Size
+                    </p>
+
+                    <p className="inline-flex items-center gap-1 text-sm font-bold text-blue-700">
+                      <Users className="w-4 h-4" />
+                      {item.groupSize}
+                    </p>
+                  </div>
+                )}
 
                 <div className="bg-green-50 p-3 rounded-lg">
                   <p className="text-xs font-medium text-gray-500 mb-1">

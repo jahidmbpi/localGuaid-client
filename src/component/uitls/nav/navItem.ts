@@ -5,15 +5,15 @@ export const adminNavItems = [
   },
   {
     label: "Admin Dashboard",
-    path: "/deshbord",
+    path: "/dashboard",
   },
   {
     label: "Manage Users",
-    path: "/deshbord/manageUser",
+    path: "/dashboard/manageUser",
   },
   {
     label: "Manage Listings",
-    path: "/deshbord/managelisting",
+    path: "/dashboard/managelisting",
   },
 ];
 export const guideNavItems = [

@@ -7,131 +7,199 @@ import { useGetALlListingQuery } from "@/redux/feature/listing/listing.api";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { Search, SlidersHorizontal, ArrowUpDown, Layers } from "lucide-react";
 
 export default function ExploreTour() {
-  const [page, setCurrentPage] = useState(0);
+  const [page, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [sort, setSort] = useState("desc");
-  // console.log(limit);
-  // console.log(page);
+  const [searchTerm, setSearchTerm] = useState("");
+
   const {
     data: listingData,
     isLoading,
     error,
-  } = useGetALlListingQuery({ page, limit, sort });
+  } = useGetALlListingQuery({
+    page,
+    limit,
+    sortBy: "createdAt",
+    sortOrder: sort,
+    searchTerm,
+  });
+
   const totalData = listingData?.data?.meta?.total || 0;
   const totalPages = Math.ceil(totalData / limit);
 
   const pageArray = Array.from({ length: totalPages }, (_, i) => i + 1);
+
   if (isLoading) {
-    return <Loader></Loader>;
+    return <Loader />;
   }
 
   if (error) {
     return (
-      <div className="text-center mt-20 text-red-500">Something went wrong</div>
+      <div className="text-center mt-20 text-red-500 font-semibold">
+        Something went wrong. Please try again.
+      </div>
     );
   }
-  // console.log(error);
-  // console.log("this is page", pageArray);
 
-  // console.log(listingData.data.meta);
   return (
-    <div className="max-w-6xl mx-auto min-h-screen">
-      <div className="flex mt-20 flex-col md:flex-row gap-2">
-        <div className="md:w-50 mt-10 md:mt-28  md:border-2  rounded-sm px-2 ">
-          <div>
-            <h2 className="text-[18px] font-sans font-medium mt-2">
-              filter listing
-            </h2>
+    <div className="max-w-7xl mx-auto min-h-screen px-4 sm:px-6 lg:px-8 py-12">
+      <div className="flex flex-col lg:flex-row gap-8 mt-12">
+        {/* Filter Section */}
+        <aside className="lg:w-64 flex-shrink-0">
+          <div className="sticky top-45 bg-white border border-gray-200 rounded-2xl p-6 shadow-xs space-y-6">
+            <div className="flex items-center gap-2 border-b border-gray-100 pb-4">
+              <SlidersHorizontal className="w-5 h-5 text-blue-600" />
+              <h2 className="text-lg font-bold text-gray-800">Filter Tours</h2>
+            </div>
 
-            <div className="space-y-2">
-              <div className="flex flex-col gap-2 ">
-                <label className="text-sm">show per page</label>
-                <select
-                  value={limit}
-                  onChange={(e) => {
-                    setLimit(Number(e.target.value));
-                    setCurrentPage(1);
-                  }}
-                  className=" border p-1 rounded-sm px-1 w-full"
-                >
-                  <option value="1">1</option>
-                  <option value="5">5</option>
-                  <option value="10">10</option>
-                  <option value="15">15</option>
-                </select>
+            <div className="space-y-5">
+              {/* Search */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  Search
+                </label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-2.5 h-4.5 w-4.5 text-gray-400" />
+                  <input
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2 pl-10 pr-4 text-sm text-gray-800 placeholder-gray-400 focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    type="text"
+                    placeholder="Search tours..."
+                    value={searchTerm}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                  />
+                </div>
               </div>
-              <div className="flex flex-col gap2">
-                <label className="text-sm font-sans">sort</label>
-                <select
-                  defaultValue=""
-                  className="border p-1 rounded-sm"
-                  onChange={(e) => setSort(e.target.value)}
-                >
-                  <option className="text-sm font-sans" value="asec">
-                    asec
-                  </option>
-                  <option className="text-sm font-sans" value="desc">
-                    desc
-                  </option>
-                </select>
+
+              {/* Sort */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  Sort By Date
+                </label>
+                <div className="relative">
+                  <ArrowUpDown className="absolute left-3 top-2.5 h-4.5 w-4.5 text-gray-400 pointer-events-none" />
+                  <select
+                    value={sort}
+                    onChange={(e) => {
+                      setSort(e.target.value);
+                      setCurrentPage(1);
+                    }}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2 pl-10 pr-8 text-sm text-gray-800 appearance-none focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  >
+                    <option value="desc">Newest First</option>
+                    <option value="asc">Oldest First</option>
+                  </select>
+                </div>
               </div>
-              <div>
-                <label className="text-sm font-sans font-medium">search</label>
-                <input
-                  className="w-full border rounded-sm py-1 px-2 text-sm"
-                  type="text"
-                />
+
+              {/* Show Per Page */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  Show Per Page
+                </label>
+                <div className="relative">
+                  <Layers className="absolute left-3 top-2.5 h-4.5 w-4.5 text-gray-400 pointer-events-none" />
+                  <select
+                    value={limit}
+                    onChange={(e) => {
+                      setLimit(Number(e.target.value));
+                      setCurrentPage(1);
+                    }}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2 pl-10 pr-8 text-sm text-gray-800 appearance-none focus:outline-hidden focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                  >
+                    <option value="1">1 Per Page</option>
+                    <option value="5">5 Per Page</option>
+                    <option value="10">10 Per Page</option>
+                    <option value="15">15 Per Page</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className=" w-full">
-          <div className="text-center items-center justify-center mt-15">
-            <h2 className="text-2xl font-sans font-bold tracking-tight">
+        </aside>
+
+        {/* Content Section */}
+        <main className="flex-1 space-y-8">
+          <div className="border-b border-gray-100 pb-5 items-center ">
+            <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight text-center">
               Explore Amazing Tours
-            </h2>
-            <p className="text-sm font-sans font-medium text-gray-600">
-              Discover culture, nature & unforgettable experiences
+            </h1>
+            <p className="text-gray-500 mt-2 text-sm sm:text-base text-center">
+              Discover culture, nature & unforgettable experiences. Found {totalData} tours.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3  gap-2">
-            {listingData?.data?.data.map((listing: any) => (
-              <div
-                key={listing.id}
-                className="border rounded-lg overflow-hidden  hover:shadow-md transition p-2 "
-              >
-                <div className="relative h-48 w-full">
-                  <Image
-                    src={listing.images[0]}
-                    alt={listing.title}
-                    fill
-                    sizes="100"
-                    loading="eager"
-                    className="object-cover rounded-sm"
-                  />
-                </div>
 
-                <div className="space-y-2 mt-1">
-                  <h2 className="text-lg font-bold">{listing.title}</h2>
-                  <p className="text-sm text-gray-600 line-clamp-3">
-                    {listing.description}
-                  </p>
-                  <Link href={`/tourDetails/${listing.id}`}>
-                    <p className="text-end text-sm text-blue-600">see more..</p>
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+          {listingData?.data?.data?.length === 0 ? (
+            <div className="text-center py-20 bg-gray-50 rounded-3xl border border-dashed border-gray-300">
+              <Search className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+              <h3 className="text-lg font-bold text-gray-800 mb-1">No Tours Found</h3>
+              <p className="text-gray-500 text-sm">
+                Try adjusting your search term or filters to find what you are looking for.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {listingData?.data?.data.map((listing: any) => (
+                <article
+                  key={listing.id}
+                  className="group bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col h-full"
+                >
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <Image
+                      src={listing.images[0]}
+                      alt={listing.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      loading="eager"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+
+                  <div className="p-5 flex flex-col flex-grow justify-between space-y-4">
+                    <div className="space-y-2">
+                      <h2 className="text-lg font-bold text-gray-800 line-clamp-1 group-hover:text-blue-600 transition-colors">
+                        {listing.title}
+                      </h2>
+                      <p className="text-sm text-gray-500 line-clamp-3 leading-relaxed">
+                        {listing.description}
+                      </p>
+                    </div>
+
+                    <div className="flex justify-between items-center pt-2 border-t border-gray-50">
+                      {listing.price && (
+                        <span className="text-sm font-extrabold text-blue-600">
+                          ৳ {listing.price.toLocaleString()}
+                        </span>
+                      )}
+                      <Link
+                        href={`/tourDetails/${listing.id}`}
+                        className="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline inline-flex items-center gap-1"
+                      >
+                        See details &rarr;
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+
+          {totalPages > 1 && (
+            <div className="pt-6">
+              <PaginationC
+                pageArray={pageArray}
+                setCurrentPage={setCurrentPage}
+                page={page}
+              />
+            </div>
+          )}
+        </main>
       </div>
-      <PaginationC
-        pageArray={pageArray}
-        setCurrentPage={setCurrentPage}
-        page={page}
-      ></PaginationC>
     </div>
   );
 }

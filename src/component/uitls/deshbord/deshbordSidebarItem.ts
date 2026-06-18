@@ -2,16 +2,20 @@ const BASE = "/dashboard";
 export const adminSidebarItem = [
   {
     label: "User Management",
-    path: "/exploreTour",
+    path: `${BASE}/manageUser`,
   },
   {
     label: "Listing Management",
-    path: "/managelisting",
+    path: `${BASE}/managelisting`,
   },
 
   {
     label: "Booking Management",
-    path: "/register",
+    path: `${BASE}/myBooking`,
+  },
+  {
+    label: "Deshboard",
+    path: `${BASE}`,
   },
 ];
 

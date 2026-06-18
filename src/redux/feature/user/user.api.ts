@@ -14,6 +14,7 @@ export const userApi = baseApi.injectEndpoints({
         url: "/user/getalluser",
         method: "GET",
       }),
+      providesTags: ["USER"],
     }),
 
     updateUserByID: builder.mutation({
