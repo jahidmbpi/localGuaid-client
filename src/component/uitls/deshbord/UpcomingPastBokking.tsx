@@ -43,12 +43,21 @@ const getStatusIcon = (status: string) => {
   }
 };
 
-const BookingTable = ({ bookings, type }: { bookings: any[]; type: "upcoming" | "past" }) => {
+const BookingTable = ({
+  bookings,
+  type,
+}: {
+  bookings: any[];
+  type: "upcoming" | "past";
+}) => {
   if (bookings.length === 0) {
     return (
       <div className="bg-white border border-dashed border-gray-300 rounded-3xl p-10 sm:p-14 text-center">
-        <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5 ${type === "upcoming" ? "bg-blue-100" : "bg-green-100"
-          }`}>
+        <div
+          className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5 ${
+            type === "upcoming" ? "bg-blue-100" : "bg-green-100"
+          }`}
+        >
           {type === "upcoming" ? (
             <CalendarDays className="w-10 h-10 text-blue-500" />
           ) : (
@@ -106,8 +115,9 @@ const BookingTable = ({ bookings, type }: { bookings: any[]; type: "upcoming" | 
             {bookings.map((item: any, index: number) => (
               <tr
                 key={item.id}
-                className={`hover:bg-blue-50/50 transition-colors duration-150 ${index % 2 === 0 ? "bg-white" : "bg-gray-50/50"
-                  }`}
+                className={`hover:bg-blue-50/50 transition-colors duration-150 ${
+                  index % 2 === 0 ? "bg-white" : "bg-gray-50/50"
+                }`}
               >
                 {/* Booking ID */}
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -124,7 +134,8 @@ const BookingTable = ({ bookings, type }: { bookings: any[]; type: "upcoming" | 
                   <div className="flex items-center gap-2">
                     <CalendarDays className="w-4 h-4 text-blue-600 flex-shrink-0" />
                     <span className="text-sm text-gray-700 font-medium">
-                      {new Date(item.startDate).toLocaleDateString()} - {new Date(item.endDate).toLocaleDateString()}
+                      {new Date(item.startDate).toLocaleDateString()} -{" "}
+                      {new Date(item.endDate).toLocaleDateString()}
                     </span>
                   </div>
                 </td>
@@ -147,10 +158,11 @@ const BookingTable = ({ bookings, type }: { bookings: any[]; type: "upcoming" | 
                 {/* Payment Status */}
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
-                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${item.paymentStatus === "PAID"
+                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
+                      item.paymentStatus === "PAID"
                         ? "bg-green-100 text-green-700 border border-green-200"
                         : "bg-red-100 text-red-700 border border-red-200"
-                      }`}
+                    }`}
                   >
                     <CreditCard className="w-3.5 h-3.5" />
                     {item.paymentStatus}
@@ -161,7 +173,7 @@ const BookingTable = ({ bookings, type }: { bookings: any[]; type: "upcoming" | 
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
                     className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold shadow-xs ${getStatusStyle(
-                      item.status
+                      item.status,
                     )}`}
                   >
                     {getStatusIcon(item.status)}
@@ -194,7 +206,10 @@ const BookingTable = ({ bookings, type }: { bookings: any[]; type: "upcoming" | 
       {/* Mobile View */}
       <div className="lg:hidden divide-y divide-gray-100">
         {bookings.map((item: any) => (
-          <div key={item.id} className="p-5 hover:bg-gray-50/50 transition-colors duration-150">
+          <div
+            key={item.id}
+            className="p-5 hover:bg-gray-50/50 transition-colors duration-150"
+          >
             <div className="flex justify-between items-start mb-4">
               <div>
                 <div className="flex items-center gap-1.5 mb-1">
@@ -209,7 +224,7 @@ const BookingTable = ({ bookings, type }: { bookings: any[]; type: "upcoming" | 
               </div>
               <span
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold shadow-xs ${getStatusStyle(
-                  item.status
+                  item.status,
                 )}`}
               >
                 {getStatusIcon(item.status)}
@@ -219,7 +234,9 @@ const BookingTable = ({ bookings, type }: { bookings: any[]; type: "upcoming" | 
 
             <div className="grid grid-cols-2 gap-3 mb-4">
               <div className="bg-blue-50/50 border border-blue-100/50 p-3 rounded-2xl">
-                <p className="text-xs text-gray-400 font-semibold mb-1">Schedule</p>
+                <p className="text-xs text-gray-400 font-semibold mb-1">
+                  Schedule
+                </p>
                 <p className="text-xs font-semibold text-blue-700">
                   {new Date(item.startDate).toLocaleDateString()}
                 </p>
@@ -230,26 +247,33 @@ const BookingTable = ({ bookings, type }: { bookings: any[]; type: "upcoming" | 
               </div>
 
               <div className="bg-emerald-50/50 border border-emerald-100/50 p-3 rounded-2xl flex flex-col justify-between">
-                <p className="text-xs text-gray-400 font-semibold mb-1">Amount</p>
+                <p className="text-xs text-gray-400 font-semibold mb-1">
+                  Amount
+                </p>
                 <p className="text-sm font-extrabold text-emerald-700">
                   ৳ {item.totalAmount.toLocaleString()}
                 </p>
               </div>
 
               <div className="bg-purple-50/50 border border-purple-100/50 p-3 rounded-2xl flex flex-col justify-between">
-                <p className="text-xs text-gray-400 font-semibold mb-1">Group Size</p>
+                <p className="text-xs text-gray-400 font-semibold mb-1">
+                  Group Size
+                </p>
                 <p className="text-xs font-bold text-purple-700">
                   {item.groupSize} {item.groupSize > 1 ? "People" : "Person"}
                 </p>
               </div>
 
               <div className="bg-orange-50/50 border border-orange-100/50 p-3 rounded-2xl flex flex-col justify-between">
-                <p className="text-xs text-gray-400 font-semibold mb-1">Payment</p>
+                <p className="text-xs text-gray-400 font-semibold mb-1">
+                  Payment
+                </p>
                 <span
-                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold w-fit ${item.paymentStatus === "PAID"
+                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold w-fit ${
+                    item.paymentStatus === "PAID"
                       ? "bg-green-100 text-green-700"
                       : "bg-red-100 text-red-700"
-                    }`}
+                  }`}
                 >
                   {item.paymentStatus}
                 </span>
@@ -258,7 +282,9 @@ const BookingTable = ({ bookings, type }: { bookings: any[]; type: "upcoming" | 
 
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-3 border-t border-dashed border-gray-100">
               <div>
-                <p className="text-[10px] text-gray-400 font-semibold">Created At</p>
+                <p className="text-[10px] text-gray-400 font-semibold">
+                  Created At
+                </p>
                 <p className="text-xs font-medium text-gray-600">
                   {new Date(item.createdAt).toLocaleString("en-US", {
                     dateStyle: "medium",
