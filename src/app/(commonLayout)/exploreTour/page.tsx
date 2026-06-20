@@ -3,17 +3,30 @@
 import Loader from "@/helper/loader";
 import PaginationC from "@/helper/pagination";
 import { useGetALlListingQuery } from "@/redux/feature/listing/listing.api";
+import { useMeQuery } from "@/redux/feature/auth/auth.api";
+import {
+  useGetMyWishlistQuery,
+  useAddToWishlistMutation,
+  useRemoveFromWishlistMutation,
+} from "@/redux/feature/wishlist/wishlist.api";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Search, SlidersHorizontal, ArrowUpDown, Layers } from "lucide-react";
+import { Search, SlidersHorizontal, ArrowUpDown, Layers, Heart } from "lucide-react";
 
 export default function ExploreTour() {
   const [page, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [sort, setSort] = useState("desc");
   const [searchTerm, setSearchTerm] = useState("");
+
+  const { data: user } = useMeQuery();
+  const { data: wishlistData } = useGetMyWishlistQuery(undefined, {
+    skip: user?.data?.role !== "TOURIST",
+  });
+  const [addToWishlist] = useAddToWishlistMutation();
+  const [removeFromWishlist] = useRemoveFromWishlistMutation();
 
   const {
     data: listingData,
@@ -31,6 +44,31 @@ export default function ExploreTour() {
   const totalPages = Math.ceil(totalData / limit);
 
   const pageArray = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+  const wishlistedListingIds = new Set(
+    wishlistData?.data?.map((item: any) => item.listingId) || []
+  );
+
+  const handleWishlistToggle = async (listingId: string) => {
+    if (!user?.data) {
+      alert("Please log in to wishlist tours.");
+      return;
+    }
+    if (user.data.role !== "TOURIST") {
+      alert("Only tourists can add tours to their wishlist.");
+      return;
+    }
+
+    try {
+      if (wishlistedListingIds.has(listingId)) {
+        await removeFromWishlist(listingId).unwrap();
+      } else {
+        await addToWishlist(listingId).unwrap();
+      }
+    } catch (err) {
+      console.error("Failed to toggle wishlist:", err);
+    }
+  };
 
   if (isLoading) {
     return <Loader />;
@@ -144,48 +182,65 @@ export default function ExploreTour() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {listingData?.data?.data.map((listing: any) => (
-                <article
-                  key={listing.id}
-                  className="group bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col h-full"
-                >
-                  <div className="relative h-48 w-full overflow-hidden">
-                    <Image
-                      src={listing.images[0]}
-                      alt={listing.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      loading="eager"
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
+              {listingData?.data?.data.map((listing: any) => {
+                const isSaved = wishlistedListingIds.has(listing.id);
+                return (
+                  <article
+                    key={listing.id}
+                    className="group bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col h-full relative"
+                  >
+                    <div className="relative h-48 w-full overflow-hidden">
+                      <Image
+                        src={listing.images[0]}
+                        alt={listing.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        loading="eager"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
 
-                  <div className="p-5 flex flex-col flex-grow justify-between space-y-4">
-                    <div className="space-y-2">
-                      <h2 className="text-lg font-bold text-gray-800 line-clamp-1 group-hover:text-blue-600 transition-colors">
-                        {listing.title}
-                      </h2>
-                      <p className="text-sm text-gray-500 line-clamp-3 leading-relaxed">
-                        {listing.description}
-                      </p>
-                    </div>
-
-                    <div className="flex justify-between items-center pt-2 border-t border-gray-50">
-                      {listing.price && (
-                        <span className="text-sm font-extrabold text-blue-600">
-                          ৳ {listing.price.toLocaleString()}
-                        </span>
+                      {/* Wishlist toggle button */}
+                      {user?.data?.role === "TOURIST" && (
+                        <button
+                          onClick={() => handleWishlistToggle(listing.id)}
+                          className="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white p-2 rounded-full shadow-md transition-all cursor-pointer"
+                        >
+                          <Heart
+                            className={`w-4 h-4 transition-colors ${
+                              isSaved ? "fill-red-500 text-red-500" : "text-gray-400 hover:text-red-500"
+                            }`}
+                          />
+                        </button>
                       )}
-                      <Link
-                        href={`/tourDetails/${listing.id}`}
-                        className="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline inline-flex items-center gap-1"
-                      >
-                        See details &rarr;
-                      </Link>
                     </div>
-                  </div>
-                </article>
-              ))}
+
+                    <div className="p-5 flex flex-col flex-grow justify-between space-y-4">
+                      <div className="space-y-2">
+                        <h2 className="text-lg font-bold text-gray-800 line-clamp-1 group-hover:text-blue-600 transition-colors">
+                          {listing.title}
+                        </h2>
+                        <p className="text-sm text-gray-500 line-clamp-3 leading-relaxed">
+                          {listing.description}
+                        </p>
+                      </div>
+
+                      <div className="flex justify-between items-center pt-2 border-t border-gray-50">
+                        {listing.price && (
+                          <span className="text-sm font-extrabold text-blue-600">
+                            ৳ {listing.price.toLocaleString()}
+                          </span>
+                        )}
+                        <Link
+                          href={`/tourDetails/${listing.id}`}
+                          className="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline inline-flex items-center gap-1"
+                        >
+                          See details &rarr;
+                        </Link>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           )}
 

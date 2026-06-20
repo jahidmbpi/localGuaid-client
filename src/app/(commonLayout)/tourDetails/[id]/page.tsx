@@ -9,6 +9,14 @@ import { Controller, useForm } from "react-hook-form";
 import { Datepicker } from "@/component/uitls/datePicket";
 import { Input } from "@/components/ui/input";
 import { useCreateBookingMutation } from "@/redux/feature/booking/booking.api";
+import { useMeQuery } from "@/redux/feature/auth/auth.api";
+import {
+  useGetMyWishlistQuery,
+  useAddToWishlistMutation,
+  useRemoveFromWishlistMutation,
+} from "@/redux/feature/wishlist/wishlist.api";
+import { Heart } from "lucide-react";
+
 type FormData = {
   startDate: Date;
   endDate: Date;
@@ -19,6 +27,15 @@ export default function Details() {
   const [open, setOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
   const [Booking] = useCreateBookingMutation();
+
+  const { data: user } = useMeQuery();
+  const { data: wishlistData } = useGetMyWishlistQuery(undefined, {
+    skip: user?.data?.role !== "TOURIST",
+  });
+  const [addToWishlist] = useAddToWishlistMutation();
+  const [removeFromWishlist] = useRemoveFromWishlistMutation();
+
+  const isSaved = wishlistData?.data?.some((item: any) => item.listingId === id) || false;
 
   const {
     control,
@@ -54,6 +71,27 @@ export default function Details() {
     reset();
     setOpen(false);
   };
+
+  const handleWishlistToggle = async () => {
+    if (!user?.data) {
+      alert("Please log in to wishlist tours.");
+      return;
+    }
+    if (user.data.role !== "TOURIST") {
+      alert("Only tourists can add tours to their wishlist.");
+      return;
+    }
+    try {
+      if (isSaved) {
+        await removeFromWishlist(id!).unwrap();
+      } else {
+        await addToWishlist(id!).unwrap();
+      }
+    } catch (err) {
+      console.error("Failed to toggle wishlist:", err);
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 space-y-4 mt-20">
       <div>
@@ -107,12 +145,29 @@ export default function Details() {
         </div>
       </div>
 
-      <button
-        onClick={() => setOpen(true)}
-        className="w-full md:w-auto bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition"
-      >
-        Book This Tour
-      </button>
+      {/* Buttons */}
+      <div className="flex items-center gap-4">
+        <button
+          onClick={() => setOpen(true)}
+          className="bg-blue-600 text-white px-6 py-2.5 rounded-lg hover:bg-blue-700 transition font-semibold cursor-pointer"
+        >
+          Book This Tour
+        </button>
+
+        {user?.data?.role === "TOURIST" && (
+          <button
+            onClick={handleWishlistToggle}
+            className={`border p-2.5 rounded-lg transition-all flex items-center justify-center cursor-pointer ${
+              isSaved
+                ? "bg-red-50 border-red-200 text-red-500 hover:bg-red-100"
+                : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
+            }`}
+          >
+            <Heart className={`w-5 h-5 ${isSaved ? "fill-red-500" : ""}`} />
+          </button>
+        )}
+      </div>
+
       {open && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-6 w-[90%] max-w-md relative">

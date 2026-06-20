@@ -15,8 +15,21 @@ export const guaidApi = baseApi.injectEndpoints({
         url: "/guaid/guaidlisting",
         method: "GET",
       }),
+      providesTags: ["Listing"],
+    }),
+    becomeGuaid: builder.mutation({
+      query: (guideInfo) => ({
+        url: "/guaid/become-guaid",
+        method: "POST",
+        data: guideInfo,
+      }),
+      invalidatesTags: ["USER"],
     }),
   }),
 });
 
-export const { useGetPopularGuaidQuery, useGetGuaidListingQuery } = guaidApi;
+export const {
+  useGetPopularGuaidQuery,
+  useGetGuaidListingQuery,
+  useBecomeGuaidMutation,
+} = guaidApi;
